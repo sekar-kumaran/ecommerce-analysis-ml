@@ -1,2 +1,15 @@
 data/*.csv filter=lfs diff=lfs merge=lfs -text
 data/*.json filter=lfs diff=lfs merge=lfs -text
+
+# Model artifacts — all tracked via Git LFS
+artifacts/models/*.pkl filter=lfs diff=lfs merge=lfs -text
+artifacts/models/*.h5 filter=lfs diff=lfs merge=lfs -text
+artifacts/models/*.keras filter=lfs diff=lfs merge=lfs -text
+artifacts/models/*.joblib filter=lfs diff=lfs merge=lfs -text
+artifacts/models/*.pt filter=lfs diff=lfs merge=lfs -text
+artifacts/models/*.pth filter=lfs diff=lfs merge=lfs -text
+artifacts/models/*.pb filter=lfs diff=lfs merge=lfs -text
+artifacts/models/*.json filter=lfs diff=lfs merge=lfs -text
+artifacts/models/*.parquet filter=lfs diff=lfs merge=lfs -text
+artifacts/encoders/*.pkl filter=lfs diff=lfs merge=lfs -text
+artifacts/scalers/*.pkl filter=lfs diff=lfs merge=lfs -text
