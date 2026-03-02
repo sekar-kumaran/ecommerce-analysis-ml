@@ -1,0 +1,115 @@
+{
+  "timestamp": "2026-02-27T16:30:13.618700",
+  "initial_shape": [
+    302010,
+    30
+  ],
+  "operations": [
+    {
+      "step": "remove_duplicates",
+      "rows_removed": 4,
+      "rows_remaining": 302006
+    },
+    {
+      "step": "convert_datetime",
+      "invalid_dates": 359,
+      "method": "pd.to_datetime with error coercion"
+    },
+    {
+      "step": "convert_numerical_types",
+      "columns_converted": [
+        "Transaction_ID",
+        "Customer_ID",
+        "Amount",
+        "Total_Amount",
+        "Total_Purchases",
+        "Age",
+        "Income",
+        "Ratings"
+      ]
+    },
+    {
+      "step": "drop_critical_missing",
+      "critical_cols": [
+        "Date",
+        "Transaction_ID",
+        "Customer_ID"
+      ],
+      "rows_before": 302006,
+      "rows_after": 301006,
+      "rows_removed": 1000
+    },
+    {
+      "step": "impute_missing_values",
+      "dropped_cols": [
+        "Date",
+        "Transaction_ID",
+        "Customer_ID"
+      ],
+      "most_frequent_cols": [
+        "Time",
+        "Shipping_Method",
+        "Income",
+        "Payment_Method",
+        "Gender",
+        "Country",
+        "State",
+        "Product_Brand",
+        "Product_Category",
+        "Order_Status",
+        "City",
+        "Customer_Segment",
+        "Feedback"
+      ],
+      "knn_cols": [
+        "Amount",
+        "Total_Amount",
+        "Age",
+        "Ratings"
+      ],
+      "constant_cols": [
+        "Transaction_DateTime",
+        "Name",
+        "Total_Purchases",
+        "Email",
+        "Address"
+      ]
+    },
+    {
+      "step": "data_validation_corrections",
+      "invalid_ages_corrected": 0,
+      "invalid_ratings_corrected": 0,
+      "negative_amounts_corrected": 0,
+      "year_mismatches_corrected": 0
+    },
+    {
+      "step": "standardize_categorical",
+      "columns": [
+        "Gender",
+        "Country",
+        "State",
+        "Customer_Segment",
+        "Order_Status",
+        "Payment_Method"
+      ]
+    },
+    {
+      "step": "create_derived_columns",
+      "new_columns": [
+        "DayOfWeek",
+        "DayOfMonth",
+        "Quarter",
+        "IsWeekend",
+        "Hour",
+        "TimeOfDay",
+        "DaysSinceFirstPurchase"
+      ]
+    }
+  ],
+  "final_shape": [
+    301006,
+    39
+  ],
+  "quality_score": 100.0,
+  "missing_values_remaining": 0
+}

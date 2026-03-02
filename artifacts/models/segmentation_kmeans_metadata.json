@@ -1,0 +1,39 @@
+{
+  "model_type": "K-Means Clustering",
+  "created_at": "2026-02-27T18:03:09.337848",
+  "n_customers": 86740,
+  "n_clusters": 2,
+  "n_features": 17,
+  "feature_columns": [
+    "Recency_Days",
+    "Total_Spend",
+    "Frequency",
+    "Transaction_Count",
+    "Customer_LTV",
+    "Avg_Order_Value",
+    "Avg_Rating",
+    "Unique_Categories",
+    "Unique_Brands",
+    "Customer_Tenure_Days",
+    "Pct_Shipped",
+    "Pct_Cancelled",
+    "Weekend_Purchase_Pct",
+    "RFM_Score",
+    "Category_Entropy",
+    "Order_Value_CV",
+    "Pct_Processing"
+  ],
+  "metrics": {
+    "silhouette_score": 0.2563180527867826,
+    "davies_bouldin_index": 1.4258235440638851,
+    "calinski_harabasz_score": 39503.044432243136
+  },
+  "cluster_sizes": {
+    "0": 44395,
+    "1": 42345
+  },
+  "segment_labels": {
+    "0": "Champions",
+    "1": "Needs Attention"
+  }
+}

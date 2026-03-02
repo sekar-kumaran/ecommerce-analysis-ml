@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>EcomAnalytics — Data Explorer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .tab-btn.active { background:#fff; color:#1d4ed8; border-color:#93c5fd; font-weight:700; }
+    .tab-panel { display:none; }
+    .tab-panel.active { display:block; }
+    .img-card { position:relative; overflow:hidden; }
+    .img-card .fallback { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .img-card img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; }
+    .img-card img.contain { object-fit:contain; }
+    .bar-track { background:#e5e7eb; border-radius:9999px; height:10px; }
+    .bar-fill { border-radius:9999px; height:10px; transition:width 0.4s ease; }
+    .seg-bar { height:28px; border-radius:6px; display:flex; align-items:center; padding:0 10px; font-size:12px; font-weight:600; color:#fff; white-space:nowrap; }
+    .donut-ring { stroke-dasharray: 251.2; stroke-width: 40; fill: none; stroke-linecap: butt; transform-origin: center; transform: rotate(-90deg); }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+    .fade-in { animation: fadeIn 0.35s ease forwards; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen">
+
+<!-- ── NAV ─────────────────────────────────────────────────────────────────── -->
+<nav class="bg-white border-b shadow-sm sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
+    <a href="index.html" class="flex items-center gap-2 font-extrabold text-lg text-blue-700">🛒 EcomAnalytics</a>
+    <div class="hidden md:flex items-center gap-1 text-sm">
+      <a href="index.html"       class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Dashboard</a>
+      <a href="data.html"        class="px-3 py-1.5 rounded-md bg-blue-600 text-white font-semibold">Data</a>
+      <a href="casestudies.html" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Case Studies</a>
+      <a href="models.html"      class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Models</a>
+      <a href="churn.html"       class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Churn</a>
+      <a href="clv.html"         class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">CLV</a>
+      <a href="fraud.html"       class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Fraud</a>
+      <a href="sentiment.html"   class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Sentiment</a>
+    </div>
+    <div id="healthBadge"></div>
+  </div>
+</nav>
+
+<!-- ── HERO ────────────────────────────────────────────────────────────────── -->
+<section class="bg-gradient-to-br from-slate-800 to-slate-900 text-white py-16 text-center px-4">
+  <div class="text-5xl mb-4">📊</div>
+  <h1 class="text-4xl md:text-5xl font-extrabold mb-3 tracking-tight">Data Explorer</h1>
+  <p class="text-slate-300 text-lg max-w-2xl mx-auto leading-relaxed">
+    A complete walkthrough — raw ingestion → cleaning → EDA → feature engineering → statistical validation
+  </p>
+  <div class="flex flex-wrap justify-center gap-6 mt-8">
+    <div class="text-center"><p class="text-3xl font-extrabold text-blue-300">302,010</p><p class="text-slate-400 text-sm mt-1">Raw Transactions</p></div>
+    <div class="border-l border-slate-600"></div>
+    <div class="text-center"><p class="text-3xl font-extrabold text-green-300">86,766</p><p class="text-slate-400 text-sm mt-1">Unique Customers</p></div>
+    <div class="border-l border-slate-600"></div>
+    <div class="text-center"><p class="text-3xl font-extrabold text-purple-300">33</p><p class="text-slate-400 text-sm mt-1">Raw Columns</p></div>
+    <div class="border-l border-slate-600"></div>
+    <div class="text-center"><p class="text-3xl font-extrabold text-orange-300">365</p><p class="text-slate-400 text-sm mt-1">Days of Data</p></div>
+    <div class="border-l border-slate-600"></div>
+    <div class="text-center"><p class="text-3xl font-extrabold text-pink-300">$411.7M</p><p class="text-slate-400 text-sm mt-1">Total Revenue</p></div>
+  </div>
+</section>
+
+<!-- ── TABS NAV ──────────────────────────────────────────────────────────────── -->
+<div class="max-w-7xl mx-auto px-4 pt-6">
+  <div class="flex flex-wrap gap-2 border-b border-gray-200" id="tabNav">
+    <button class="tab-btn active px-5 py-2.5 rounded-t-lg border border-b-0 text-sm" data-tab="overview">📋 Overview</button>
+    <button class="tab-btn px-5 py-2.5 rounded-t-lg border border-b-0 text-sm text-gray-500 bg-gray-50 hover:bg-white" data-tab="cleaning">🧹 Cleaning</button>
+    <button class="tab-btn px-5 py-2.5 rounded-t-lg border border-b-0 text-sm text-gray-500 bg-gray-50 hover:bg-white" data-tab="eda">📈 EDA</button>
+    <button class="tab-btn px-5 py-2.5 rounded-t-lg border border-b-0 text-sm text-gray-500 bg-gray-50 hover:bg-white" data-tab="features">⚙️ Features</button>
+    <button class="tab-btn px-5 py-2.5 rounded-t-lg border border-b-0 text-sm text-gray-500 bg-gray-50 hover:bg-white" data-tab="stats">🔬 Statistics</button>
+    <button class="tab-btn px-5 py-2.5 rounded-t-lg border border-b-0 text-sm text-gray-500 bg-gray-50 hover:bg-white" data-tab="models">🤖 Models</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+     TAB 1 · DATASET OVERVIEW
+════════════════════════════════════════════════════════════════════════════ -->
+<div id="tab-overview" class="tab-panel active max-w-7xl mx-auto px-4 py-8 fade-in">
+
+  <!-- KPIs -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white rounded-2xl p-5 border-l-4 border-blue-500 shadow-sm">
+      <p class="text-xs text-gray-400 uppercase tracking-wide">Raw Transactions</p>
+      <p class="text-3xl font-extrabold text-gray-900 mt-1">302,010</p>
+      <p class="text-xs text-gray-400 mt-1">365 day period · 2024–2025</p>
+    </div>
+    <div class="bg-white rounded-2xl p-5 border-l-4 border-green-500 shadow-sm">
+      <p class="text-xs text-gray-400 uppercase tracking-wide">Unique Customers</p>
+      <p class="text-3xl font-extrabold text-gray-900 mt-1">86,766</p>
+      <p class="text-xs text-gray-400 mt-1">~3.5 transactions each</p>
+    </div>
+    <div class="bg-white rounded-2xl p-5 border-l-4 border-purple-500 shadow-sm">
+      <p class="text-xs text-gray-400 uppercase tracking-wide">Columns</p>
+      <p class="text-3xl font-extrabold text-gray-900 mt-1">33</p>
+      <p class="text-xs text-gray-400 mt-1">10 numeric · 20 categorical</p>
+    </div>
+    <div class="bg-white rounded-2xl p-5 border-l-4 border-orange-500 shadow-sm">
+      <p class="text-xs text-gray-400 uppercase tracking-wide">Total Revenue</p>
+      <p class="text-3xl font-extrabold text-gray-900 mt-1">$411.7M</p>
+      <p class="text-xs text-gray-400 mt-1">Avg order $1,368</p>
+    </div>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-6 mb-8">
+
+    <!-- Dataset Source -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm">
+      <h2 class="text-lg font-bold mb-4 flex items-center gap-2">📁 Dataset Source &amp; Context</h2>
+      <p class="text-sm text-gray-600 mb-4 leading-relaxed">
+        One year of retail e-commerce transactions from a multi-category online store. Each row is a
+        <strong>single transaction</strong>, capturing customer demographics, product details, payment &amp;
+        shipping info, ratings, and order status.
+      </p>
+      <div class="space-y-2 text-sm">
+        <div class="flex items-start gap-2"><span class="text-green-600 font-bold mt-0.5">✓</span><span>5 product categories: Electronics · Clothing · Home · Sports · Books</span></div>
+        <div class="flex items-start gap-2"><span class="text-green-600 font-bold mt-0.5">✓</span><span>5 shipping methods · 4 payment methods</span></div>
+        <div class="flex items-start gap-2"><span class="text-green-600 font-bold mt-0.5">✓</span><span>US states + international geographic spread</span></div>
+        <div class="flex items-start gap-2"><span class="text-orange-500 font-bold mt-0.5">!</span><span><strong>31 of 33 columns</strong> had missing values — addressed in cleaning</span></div>
+        <div class="flex items-start gap-2"><span class="text-orange-500 font-bold mt-0.5">!</span><span><strong>709 year-mismatch dates</strong> detected and corrected</span></div>
+        <div class="flex items-start gap-2"><span class="text-blue-500 font-bold mt-0.5">→</span><span>Source: Notebook 01 · Data Understanding</span></div>
+      </div>
+    </div>
+
+    <!-- Column Groups -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm">
+      <h2 class="text-lg font-bold mb-4">🏷️ Column Groups</h2>
+      <div class="space-y-3 text-sm">
+        <div>
+          <p class="font-semibold text-blue-700 mb-1.5">Identity (3)</p>
+          <div class="flex flex-wrap gap-1">
+            <span class="bg-blue-50 text-blue-700 text-xs px-2 py-0.5 rounded font-mono">Transaction_ID</span>
+            <span class="bg-blue-50 text-blue-700 text-xs px-2 py-0.5 rounded font-mono">Customer_ID</span>
+            <span class="bg-blue-50 text-blue-700 text-xs px-2 py-0.5 rounded font-mono">Date / Time</span>
+          </div>
+        </div>
+        <div>
+          <p class="font-semibold text-green-700 mb-1.5">Transaction (6)</p>
+          <div class="flex flex-wrap gap-1">
+            <span class="bg-green-50 text-green-700 text-xs px-2 py-0.5 rounded font-mono">Amount</span>
+            <span class="bg-green-50 text-green-700 text-xs px-2 py-0.5 rounded font-mono">Total_Amount</span>
+            <span class="bg-green-50 text-green-700 text-xs px-2 py-0.5 rounded font-mono">Total_Purchases</span>
+            <span class="bg-green-50 text-green-700 text-xs px-2 py-0.5 rounded font-mono">Payment_Method</span>
+            <span class="bg-green-50 text-green-700 text-xs px-2 py-0.5 rounded font-mono">Order_Status</span>
+            <span class="bg-green-50 text-green-700 text-xs px-2 py-0.5 rounded font-mono">Shipping_Method</span>
+          </div>
+        </div>
+        <div>
+          <p class="font-semibold text-purple-700 mb-1.5">Product (4)</p>
+          <div class="flex flex-wrap gap-1">
+            <span class="bg-purple-50 text-purple-700 text-xs px-2 py-0.5 rounded font-mono">Product_Category</span>
+            <span class="bg-purple-50 text-purple-700 text-xs px-2 py-0.5 rounded font-mono">Product_Brand</span>
+            <span class="bg-purple-50 text-purple-700 text-xs px-2 py-0.5 rounded font-mono">Product_Type</span>
+            <span class="bg-purple-50 text-purple-700 text-xs px-2 py-0.5 rounded font-mono">Ratings</span>
+          </div>
+        </div>
+        <div>
+          <p class="font-semibold text-orange-700 mb-1.5">Customer Demographics (6)</p>
+          <div class="flex flex-wrap gap-1">
+            <span class="bg-orange-50 text-orange-700 text-xs px-2 py-0.5 rounded font-mono">Age</span>
+            <span class="bg-orange-50 text-orange-700 text-xs px-2 py-0.5 rounded font-mono">Gender</span>
+            <span class="bg-orange-50 text-orange-700 text-xs px-2 py-0.5 rounded font-mono">Income</span>
+            <span class="bg-orange-50 text-orange-700 text-xs px-2 py-0.5 rounded font-mono">City</span>
+            <span class="bg-orange-50 text-orange-700 text-xs px-2 py-0.5 rounded font-mono">State</span>
+            <span class="bg-orange-50 text-orange-700 text-xs px-2 py-0.5 rounded font-mono">Country</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Revenue by Category (CSS bars) -->
+  <div class="grid md:grid-cols-2 gap-6 mb-8">
+    <div class="bg-white rounded-2xl p-6 shadow-sm">
+      <h3 class="font-bold mb-5">Revenue by Product Category</h3>
+      <div class="space-y-4">
+        <div>
+          <div class="flex justify-between text-sm mb-1.5"><span class="font-medium">Electronics</span><span class="text-gray-500">$97.6M · 23.7%</span></div>
+          <div class="bar-track"><div class="bar-fill bg-blue-500" style="width:100%"></div></div>
+        </div>
+        <div>
+          <div class="flex justify-between text-sm mb-1.5"><span class="font-medium">Clothing</span><span class="text-gray-500">$89.2M · 21.7%</span></div>
+          <div class="bar-track"><div class="bar-fill bg-emerald-500" style="width:91%"></div></div>
+        </div>
+        <div>
+          <div class="flex justify-between text-sm mb-1.5"><span class="font-medium">Home &amp; Garden</span><span class="text-gray-500">$82.4M · 20.0%</span></div>
+          <div class="bar-track"><div class="bar-fill bg-amber-500" style="width:84%"></div></div>
+        </div>
+        <div>
+          <div class="flex justify-between text-sm mb-1.5"><span class="font-medium">Sports</span><span class="text-gray-500">$74.1M · 18.0%</span></div>
+          <div class="bar-track"><div class="bar-fill bg-orange-500" style="width:76%"></div></div>
+        </div>
+        <div>
+          <div class="flex justify-between text-sm mb-1.5"><span class="font-medium">Books</span><span class="text-gray-500">$68.4M · 16.6%</span></div>
+          <div class="bar-track"><div class="bar-fill bg-violet-500" style="width:70%"></div></div>
+        </div>
+      </div>
+      <p class="text-xs text-gray-400 mt-4">Total: $411.7M · Electronics leads by 2 percentage points</p>
+    </div>
+
+    <!-- Order Status (inline donut approximation using CSS grid) -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm">
+      <h3 class="font-bold mb-5">Order Status Distribution</h3>
+      <div class="flex items-center gap-6">
+        <!-- Donut via SVG — pure static, no JS -->
+        <svg viewBox="0 0 100 100" class="w-36 h-36 shrink-0" aria-hidden="true">
+          <!-- Shipped 61.4% → dash 154.3 offset 0 -->
+          <circle class="donut-ring" cx="50" cy="50" r="40" stroke="#22c55e"
+                  stroke-dasharray="154.3 97.0" stroke-dashoffset="0"/>
+          <!-- Cancelled 20.3% → dash 51.0 offset -154.3 -->
+          <circle class="donut-ring" cx="50" cy="50" r="40" stroke="#ef4444"
+                  stroke-dasharray="51.0 200.3" stroke-dashoffset="-154.3"/>
+          <!-- Processing 12.8% → dash 32.2 offset -205.3 -->
+          <circle class="donut-ring" cx="50" cy="50" r="40" stroke="#f59e0b"
+                  stroke-dasharray="32.2 219.0" stroke-dashoffset="-205.3"/>
+          <!-- Returned 5.5% → dash 13.8 offset -237.5 -->
+          <circle class="donut-ring" cx="50" cy="50" r="40" stroke="#94a3b8"
+                  stroke-dasharray="13.8 237.4" stroke-dashoffset="-237.5"/>
+          <text x="50" y="46" text-anchor="middle" font-size="10" font-weight="bold" fill="#374151">61.4%</text>
+          <text x="50" y="58" text-anchor="middle" font-size="7" fill="#6b7280">Shipped</text>
+        </svg>
+        <div class="space-y-3 text-sm flex-1">
+          <div class="flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-green-500 shrink-0"></span><span class="flex-1">Shipped</span><span class="font-bold">61.4%</span></div>
+          <div class="flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-red-500 shrink-0"></span><span class="flex-1">Cancelled</span><span class="font-bold">20.3%</span></div>
+          <div class="flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-amber-500 shrink-0"></span><span class="flex-1">Processing</span><span class="font-bold">12.8%</span></div>
+          <div class="flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-slate-400 shrink-0"></span><span class="flex-1">Returned</span><span class="font-bold">5.5%</span></div>
+          <p class="text-xs text-gray-400 pt-1">n = 301,006 clean transactions</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick stats row -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="bg-white rounded-xl p-5 shadow-sm text-center">
+      <p class="text-xs text-gray-400 uppercase mb-1">Avg Customer LTV</p>
+      <p class="text-2xl font-extrabold text-green-600">$4,746</p>
+      <p class="text-xs text-gray-400">Median $4,222</p>
+    </div>
+    <div class="bg-white rounded-xl p-5 shadow-sm text-center">
+      <p class="text-xs text-gray-400 uppercase mb-1">Avg Recency</p>
+      <p class="text-2xl font-extrabold text-blue-600">96 days</p>
+      <p class="text-xs text-gray-400">Across 86,740 customers</p>
+    </div>
+    <div class="bg-white rounded-xl p-5 shadow-sm text-center">
+      <p class="text-xs text-gray-400 uppercase mb-1">Avg Product Rating</p>
+      <p class="text-2xl font-extrabold text-purple-600">3.16 / 5</p>
+      <p class="text-xs text-gray-400">Ratings clipped to [1–5]</p>
+    </div>
+    <div class="bg-white rounded-xl p-5 shadow-sm text-center">
+      <p class="text-xs text-gray-400 uppercase mb-1">Champions Segment</p>
+      <p class="text-2xl font-extrabold text-orange-600">18.4%</p>
+      <p class="text-xs text-gray-400">of customer base</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+     TAB 2 · DATA CLEANING
+════════════════════════════════════════════════════════════════════════════ -->
+<div id="tab-cleaning" class="tab-panel max-w-7xl mx-auto px-4 py-8">
+
+  <div class="bg-white rounded-2xl p-6 shadow-sm mb-6">
+    <div class="flex items-start justify-between gap-4 flex-wrap">
+      <div>
+        <h2 class="text-xl font-bold">Notebook 02 — Data Cleaning Pipeline</h2>
+        <p class="text-sm text-gray-500 mt-1">8-step systematic cleaning · Input: 302,010 × 33 → Output: 301,006 × 39 (cols after derived features)</p>
+      </div>
+      <div class="flex gap-3 flex-wrap">
+        <div class="bg-red-50 border border-red-200 rounded-xl px-4 py-2 text-center">
+          <p class="text-xl font-extrabold text-red-600">302,010</p>
+          <p class="text-xs text-red-400">Raw rows</p>
+        </div>
+        <div class="flex items-center text-gray-400 font-bold">→</div>
+        <div class="bg-green-50 border border-green-200 rounded-xl px-4 py-2 text-center">
+          <p class="text-xl font-extrabold text-green-600">301,006</p>
+          <p class="text-xs text-green-400">Clean rows</p>
+        </div>
+        <div class="bg-blue-50 border border-blue-200 rounded-xl px-4 py-2 text-center">
+          <p class="text-xl font-extrabold text-blue-600">100%</p>
+          <p class="text-xs text-blue-400">Quality score</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8 cleaning steps -->
+  <div class="grid md:grid-cols-2 gap-4 mb-8">
+    <div class="bg-white rounded-2xl p-5 shadow-sm border-l-4 border-blue-400">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-extrabold text-sm flex items-center justify-center">1</span>
+        <p class="font-semibold text-blue-700">🔍 Remove Duplicates</p>
+      </div>
+      <p class="text-sm text-gray-600"><strong>4 exact duplicate rows</strong> found and removed. Subset key: Transaction_ID + Date + Customer_ID.</p>
+      <p class="text-xs text-gray-400 mt-2">302,010 → 302,006 rows</p>
+    </div>
+    <div class="bg-white rounded-2xl p-5 shadow-sm border-l-4 border-yellow-400">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="w-8 h-8 rounded-full bg-yellow-100 text-yellow-700 font-extrabold text-sm flex items-center justify-center">2</span>
+        <p class="font-semibold text-yellow-700">📅 Convert &amp; Validate Dates</p>
+      </div>
+      <p class="text-sm text-gray-600"><strong>709 year-mismatch dates</strong> corrected using contextual inference. 359 invalid dates coerced via <code>errors='coerce'</code>.</p>
+      <p class="text-xs text-gray-400 mt-2">All dates now within 2024–2025 range</p>
+    </div>
+    <div class="bg-white rounded-2xl p-5 shadow-sm border-l-4 border-purple-400">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="w-8 h-8 rounded-full bg-purple-100 text-purple-700 font-extrabold text-sm flex items-center justify-center">3</span>
+        <p class="font-semibold text-purple-700">🔢 Type Conversion</p>
+      </div>
+      <p class="text-sm text-gray-600">Transaction_ID, Customer_ID, Amount, Total_Amount, Total_Purchases, Age, Income, Ratings cast to correct types.</p>
+      <p class="text-xs text-gray-400 mt-2">No data loss during conversion</p>
+    </div>
+    <div class="bg-white rounded-2xl p-5 shadow-sm border-l-4 border-red-400">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="w-8 h-8 rounded-full bg-red-100 text-red-700 font-extrabold text-sm flex items-center justify-center">4</span>
+        <p class="font-semibold text-red-700">🗑️ Drop Critical Nulls</p>
+      </div>
+      <p class="text-sm text-gray-600"><strong>1,000 rows dropped</strong> where Date, Transaction_ID, or Customer_ID was null — these cannot be imputed.</p>
+      <p class="text-xs text-gray-400 mt-2">302,006 → 301,006 rows</p>
+    </div>
+    <div class="bg-white rounded-2xl p-5 shadow-sm border-l-4 border-green-400">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="w-8 h-8 rounded-full bg-green-100 text-green-700 font-extrabold text-sm flex items-center justify-center">5</span>
+        <p class="font-semibold text-green-700">🩹 Impute Remaining Nulls</p>
+      </div>
+      <p class="text-sm text-gray-600">Numerical columns filled with <strong>median</strong>; categorical with <strong>mode</strong>. Imputation applied column-wise with no data leakage.</p>
+      <p class="text-xs text-gray-400 mt-2">31 columns had ≥1 missing value</p>
+    </div>
+    <div class="bg-white rounded-2xl p-5 shadow-sm border-l-4 border-orange-400">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="w-8 h-8 rounded-full bg-orange-100 text-orange-700 font-extrabold text-sm flex items-center justify-center">6</span>
+        <p class="font-semibold text-orange-700">✂️ Clip Rating Outliers</p>
+      </div>
+      <p class="text-sm text-gray-600">Ratings clipped to valid range <strong>[1, 5]</strong>. Zero violations found in this dataset — ratings were already clean.</p>
+      <p class="text-xs text-gray-400 mt-2">0 values clipped</p>
+    </div>
+    <div class="bg-white rounded-2xl p-5 shadow-sm border-l-4 border-teal-400">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="w-8 h-8 rounded-full bg-teal-100 text-teal-700 font-extrabold text-sm flex items-center justify-center">7</span>
+        <p class="font-semibold text-teal-700">📊 Normalise Numeric Ranges</p>
+      </div>
+      <p class="text-sm text-gray-600">Amount and Income: IQR sanity checks performed. Values within <strong>3σ</strong> retained. Standardisation deferred to model pipelines.</p>
+      <p class="text-xs text-gray-400 mt-2">No extreme outliers found</p>
+    </div>
+    <div class="bg-white rounded-2xl p-5 shadow-sm border-l-4 border-green-600">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="w-8 h-8 rounded-full bg-green-200 text-green-800 font-extrabold text-sm flex items-center justify-center">8</span>
+        <p class="font-semibold text-green-700">✅ Final Validation</p>
+      </div>
+      <p class="text-sm text-gray-600">All columns confirmed correct dtype. <strong>Zero nulls remaining</strong>. Quality score 100%. Clean dataset saved to <code>data/processed/</code>.</p>
+      <p class="text-xs text-gray-400 mt-2">301,006 × 39 final shape</p>
+    </div>
+  </div>
+
+  <!-- Imputation strategies table -->
+  <div class="bg-white rounded-2xl p-6 shadow-sm">
+    <h3 class="font-bold mb-4">Imputation Strategy Reference</h3>
+    <div class="overflow-x-auto">
+      <table class="text-sm w-full">
+        <thead>
+          <tr class="border-b text-left text-gray-500 text-xs uppercase tracking-wide">
+            <th class="pb-2 pr-6">Field Group</th>
+            <th class="pb-2 pr-6">Examples</th>
+            <th class="pb-2 pr-6">Strategy</th>
+            <th class="pb-2">Rationale</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr class="py-2">
+            <td class="py-2.5 pr-6 font-medium">Numeric continuous</td>
+            <td class="py-2.5 pr-6 text-gray-500">Age, Income, Amount</td>
+            <td class="py-2.5 pr-6"><span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs font-semibold">Median fill</span></td>
+            <td class="py-2.5 text-gray-500">Robust to right-skew in financial data</td>
+          </tr>
+          <tr>
+            <td class="py-2.5 pr-6 font-medium">Categorical</td>
+            <td class="py-2.5 pr-6 text-gray-500">Gender, Payment, State</td>
+            <td class="py-2.5 pr-6"><span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs font-semibold">Mode fill</span></td>
+            <td class="py-2.5 text-gray-500">Most frequent value preserves distribution</td>
+          </tr>
+          <tr>
+            <td class="py-2.5 pr-6 font-medium">Date mismatches</td>
+            <td class="py-2.5 pr-6 text-gray-500">Year off by ±1</td>
+            <td class="py-2.5 pr-6"><span class="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded text-xs font-semibold">Year correction</span></td>
+            <td class="py-2.5 text-gray-500">709 cases corrected by contextual year inference</td>
+          </tr>
+          <tr>
+            <td class="py-2.5 pr-6 font-medium">Critical identity</td>
+            <td class="py-2.5 pr-6 text-gray-500">Transaction_ID, Customer_ID, Date</td>
+            <td class="py-2.5 pr-6"><span class="bg-red-100 text-red-700 px-2 py-0.5 rounded text-xs font-semibold">Row dropped</span></td>
+            <td class="py-2.5 text-gray-500">Cannot be estimated — removal safer</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+     TAB 3 · EDA
+════════════════════════════════════════════════════════════════════════════ -->
+<div id="tab-eda" class="tab-panel max-w-7xl mx-auto px-4 py-8">
+
+  <div class="bg-white rounded-2xl p-6 shadow-sm mb-6">
+    <h2 class="text-xl font-bold">Notebook 04 — Exploratory Data Analysis</h2>
+    <p class="text-sm text-gray-500 mt-1">Business insights from 301K transactions. Click any image to expand. Images served from the API at <code>localhost:8000</code>.</p>
+  </div>
+
+  <!-- Summary stats -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white rounded-xl p-4 text-center border-t-4 border-blue-400 shadow-sm">
+      <p class="text-2xl font-extrabold text-blue-700">Thursday</p>
+      <p class="text-xs text-gray-500 mt-1">Best day by revenue</p>
+    </div>
+    <div class="bg-white rounded-xl p-4 text-center border-t-4 border-green-400 shadow-sm">
+      <p class="text-2xl font-extrabold text-green-700">7 AM</p>
+      <p class="text-xs text-gray-500 mt-1">Peak purchase hour</p>
+    </div>
+    <div class="bg-white rounded-xl p-4 text-center border-t-4 border-purple-400 shadow-sm">
+      <p class="text-2xl font-extrabold text-purple-700">3.16★</p>
+      <p class="text-xs text-gray-500 mt-1">Avg product rating</p>
+    </div>
+    <div class="bg-white rounded-xl p-4 text-center border-t-4 border-orange-400 shadow-sm">
+      <p class="text-2xl font-extrabold text-orange-700">18.4%</p>
+      <p class="text-xs text-gray-500 mt-1">Champions segment</p>
+    </div>
+  </div>
+
+  <!-- EDA image grid — 8 images from eda_visualizations/ -->
+  <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8" id="edaGrid">
+
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="img-card h-52 cursor-zoom-in" onclick="openLightbox('http://localhost:8000/static/eda/customer_distribution.png?v=2')">
+        <div class="fallback bg-gradient-to-br from-blue-50 to-blue-100">
+          <div class="text-4xl mb-2 opacity-30">👤</div>
+          <p class="text-xs font-medium text-gray-500">Customer Distribution</p>
+          <p class="text-xs text-gray-400 mt-1">Start API server to view</p>
+        </div>
+        <img src="http://localhost:8000/static/eda/customer_distribution.png?v=2" alt="Customer Distribution" onerror="this.style.display='none'"/>
+      </div>
+      <div class="p-4"><h3 class="font-semibold">Customer Distribution</h3><p class="text-xs text-gray-500 mt-1">Age, gender and income spread across 86,766 customers</p></div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="img-card h-52 cursor-zoom-in" onclick="openLightbox('http://localhost:8000/static/eda/revenue_trends.png?v=2')">
+        <div class="fallback bg-gradient-to-br from-green-50 to-green-100">
+          <div class="text-4xl mb-2 opacity-30">📈</div>
+          <p class="text-xs font-medium text-gray-500">Revenue Trends</p>
+          <p class="text-xs text-gray-400 mt-1">Start API server to view</p>
+        </div>
+        <img src="http://localhost:8000/static/eda/revenue_trends.png?v=2" alt="Revenue Trends" onerror="this.style.display='none'"/>
+      </div>
+      <div class="p-4"><h3 class="font-semibold">Revenue Trends</h3><p class="text-xs text-gray-500 mt-1">Daily and weekly revenue patterns over the full 365-day period</p></div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="img-card h-52 cursor-zoom-in" onclick="openLightbox('http://localhost:8000/static/eda/product_analysis.png?v=2')">
+        <div class="fallback bg-gradient-to-br from-purple-50 to-purple-100">
+          <div class="text-4xl mb-2 opacity-30">🛍️</div>
+          <p class="text-xs font-medium text-gray-500">Product Analysis</p>
+          <p class="text-xs text-gray-400 mt-1">Start API server to view</p>
+        </div>
+        <img src="http://localhost:8000/static/eda/product_analysis.png?v=2" alt="Product Analysis" onerror="this.style.display='none'"/>
+      </div>
+      <div class="p-4"><h3 class="font-semibold">Product Analysis</h3><p class="text-xs text-gray-500 mt-1">Category and brand breakdown by revenue and transaction volume</p></div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="img-card h-52 cursor-zoom-in" onclick="openLightbox('http://localhost:8000/static/eda/rfm_segmentation.png?v=2')">
+        <div class="fallback bg-gradient-to-br from-orange-50 to-orange-100">
+          <div class="text-4xl mb-2 opacity-30">🎯</div>
+          <p class="text-xs font-medium text-gray-500">RFM Segmentation</p>
+          <p class="text-xs text-gray-400 mt-1">Start API server to view</p>
+        </div>
+        <img src="http://localhost:8000/static/eda/rfm_segmentation.png?v=2" alt="RFM Segmentation" onerror="this.style.display='none'"/>
+      </div>
+      <div class="p-4"><h3 class="font-semibold">RFM Segmentation</h3><p class="text-xs text-gray-500 mt-1">Champions 18.4% · Loyal 16.6% · At-Risk 14.6% · Rising Stars 16.8%</p></div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="img-card h-52 cursor-zoom-in" onclick="openLightbox('http://localhost:8000/static/eda/cohort_analysis.png?v=2')">
+        <div class="fallback bg-gradient-to-br from-teal-50 to-teal-100">
+          <div class="text-4xl mb-2 opacity-30">📅</div>
+          <p class="text-xs font-medium text-gray-500">Cohort Analysis</p>
+          <p class="text-xs text-gray-400 mt-1">Start API server to view</p>
+        </div>
+        <img src="http://localhost:8000/static/eda/cohort_analysis.png?v=2" alt="Cohort Analysis" onerror="this.style.display='none'"/>
+      </div>
+      <div class="p-4"><h3 class="font-semibold">Cohort Analysis</h3><p class="text-xs text-gray-500 mt-1">Monthly retention rates by customer acquisition cohort</p></div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="img-card h-52 cursor-zoom-in" onclick="openLightbox('http://localhost:8000/static/eda/correlation_matrix.png?v=2')">
+        <div class="fallback bg-gradient-to-br from-slate-100 to-slate-200">
+          <div class="text-4xl mb-2 opacity-30">🔗</div>
+          <p class="text-xs font-medium text-gray-500">Correlation Matrix</p>
+          <p class="text-xs text-gray-400 mt-1">Start API server to view</p>
+        </div>
+        <img src="http://localhost:8000/static/eda/correlation_matrix.png?v=2" alt="Correlation Matrix" onerror="this.style.display='none'"/>
+      </div>
+      <div class="p-4"><h3 class="font-semibold">Correlation Matrix</h3><p class="text-xs text-gray-500 mt-1">Pearson correlations among all numeric features — heatmap view</p></div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="img-card h-52 cursor-zoom-in" onclick="openLightbox('http://localhost:8000/static/eda/demographics_frequency_income.png')">
+        <div class="fallback bg-gradient-to-br from-pink-50 to-pink-100">
+          <div class="text-4xl mb-2 opacity-30">📊</div>
+          <p class="text-xs font-medium text-gray-500">Demographics × Frequency</p>
+          <p class="text-xs text-gray-400 mt-1">Start API server to view</p>
+        </div>
+        <img src="http://localhost:8000/static/eda/demographics_frequency_income.png" alt="Demographics Frequency Income" onerror="this.style.display='none'"/>
+      </div>
+      <div class="p-4"><h3 class="font-semibold">Demographics &amp; Frequency</h3><p class="text-xs text-gray-500 mt-1">Purchase frequency and income distribution by demographic segment</p></div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="img-card h-52 cursor-zoom-in" onclick="openLightbox('http://localhost:8000/static/eda/spending_distribution.png')">
+        <div class="fallback bg-gradient-to-br from-yellow-50 to-yellow-100">
+          <div class="text-4xl mb-2 opacity-30">💰</div>
+          <p class="text-xs font-medium text-gray-500">Spending Distribution</p>
+          <p class="text-xs text-gray-400 mt-1">Start API server to view</p>
+        </div>
+        <img src="http://localhost:8000/static/eda/spending_distribution.png" alt="Spending Distribution" onerror="this.style.display='none'"/>
+      </div>
+      <div class="p-4"><h3 class="font-semibold">Spending Distribution</h3><p class="text-xs text-gray-500 mt-1">Transaction amount distribution — right-skewed, log-normal pattern</p></div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="img-card h-52 cursor-zoom-in" onclick="openLightbox('http://localhost:8000/static/reports/segmentation_kmeans_clusters.png')">
+        <div class="fallback bg-gradient-to-br from-indigo-50 to-indigo-100">
+          <div class="text-4xl mb-2 opacity-30">🔵</div>
+          <p class="text-xs font-medium text-gray-500">K-Means Clusters</p>
+          <p class="text-xs text-gray-400 mt-1">Start API server to view</p>
+        </div>
+        <img src="http://localhost:8000/static/reports/segmentation_kmeans_clusters.png" alt="K-Means Clusters" onerror="this.style.display='none'"/>
+      </div>
+      <div class="p-4"><h3 class="font-semibold">K-Means Clusters</h3><p class="text-xs text-gray-500 mt-1">5 customer segments visualised in 2D PCA space</p></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+     TAB 4 · FEATURE ENGINEERING
+════════════════════════════════════════════════════════════════════════════ -->
+<div id="tab-features" class="tab-panel max-w-7xl mx-auto px-4 py-8">
+
+  <div class="bg-white rounded-2xl p-6 shadow-sm mb-6">
+    <h2 class="text-xl font-bold">Notebook 03 — Feature Engineering</h2>
+    <p class="text-sm text-gray-500 mt-1">301K transaction rows aggregated to <strong>one row per customer</strong> (86,740 customers) → 34 derived ML features.</p>
+  </div>
+
+  <!-- Feature groups -->
+  <div class="grid md:grid-cols-3 gap-4 mb-8">
+    <div class="bg-blue-50 rounded-2xl p-5 border border-blue-100">
+      <p class="font-bold text-blue-800 mb-3">💰 RFM Features</p>
+      <div class="space-y-1.5">
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span><code class="text-blue-700 text-xs">Recency_Days</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span><code class="text-blue-700 text-xs">Frequency</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span><code class="text-blue-700 text-xs">Total_Spend</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span><code class="text-blue-700 text-xs">Customer_LTV</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span><code class="text-blue-700 text-xs">RFM_Score</code></div>
+      </div>
+    </div>
+    <div class="bg-green-50 rounded-2xl p-5 border border-green-100">
+      <p class="font-bold text-green-800 mb-3">⏱️ Temporal Features</p>
+      <div class="space-y-1.5">
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span><code class="text-green-700 text-xs">Customer_Tenure_Days</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span><code class="text-green-700 text-xs">Preferred_Hour</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span><code class="text-green-700 text-xs">Weekend_Pct</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span><code class="text-green-700 text-xs">Avg_Days_Between</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span><code class="text-green-700 text-xs">Transactions_Per_Month</code></div>
+      </div>
+    </div>
+    <div class="bg-purple-50 rounded-2xl p-5 border border-purple-100">
+      <p class="font-bold text-purple-800 mb-3">🛍️ Product Diversity</p>
+      <div class="space-y-1.5">
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span><code class="text-purple-700 text-xs">Unique_Categories</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span><code class="text-purple-700 text-xs">Category_Entropy</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span><code class="text-purple-700 text-xs">Unique_Brands</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span><code class="text-purple-700 text-xs">Favourite_Category</code></div>
+      </div>
+    </div>
+    <div class="bg-orange-50 rounded-2xl p-5 border border-orange-100">
+      <p class="font-bold text-orange-800 mb-3">⭐ Engagement &amp; Satisfaction</p>
+      <div class="space-y-1.5">
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span><code class="text-orange-700 text-xs">Avg_Rating</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span><code class="text-orange-700 text-xs">Std_Rating</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span><code class="text-orange-700 text-xs">Is_Satisfied_Customer</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span><code class="text-orange-700 text-xs">Avg_Order_Value</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span><code class="text-orange-700 text-xs">Std_Order_Value</code></div>
+      </div>
+    </div>
+    <div class="bg-red-50 rounded-2xl p-5 border border-red-100">
+      <p class="font-bold text-red-800 mb-3">⚠️ Order Quality</p>
+      <div class="space-y-1.5">
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-red-500"></span><code class="text-red-700 text-xs">Pct_Cancelled</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-red-500"></span><code class="text-red-700 text-xs">Pct_Shipped</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-red-500"></span><code class="text-red-700 text-xs">Pct_Returned</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-red-500"></span><code class="text-red-700 text-xs">Payment_Method_Changes</code></div>
+      </div>
+    </div>
+    <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100">
+      <p class="font-bold text-slate-800 mb-3">👥 Demographics</p>
+      <div class="space-y-1.5">
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span><code class="text-slate-700 text-xs">Age</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span><code class="text-slate-700 text-xs">Gender</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span><code class="text-slate-700 text-xs">Income</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span><code class="text-slate-700 text-xs">Preferred_Payment</code></div>
+        <div class="flex items-center gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span><code class="text-slate-700 text-xs">Preferred_Shipping</code></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature Importance bar chart (CSS — no JS needed) -->
+  <div class="bg-white rounded-2xl p-6 shadow-sm mb-6">
+    <h3 class="font-bold mb-5">Top 10 Feature Importances — XGBoost Churn Model</h3>
+    <div class="space-y-3">
+      <div>
+        <div class="flex justify-between text-sm mb-1"><span class="font-mono font-medium text-gray-700">Recency_Days</span><span class="text-gray-400 text-xs">0.187</span></div>
+        <div class="bar-track"><div class="bar-fill bg-violet-600" style="width:100%"></div></div>
+      </div>
+      <div>
+        <div class="flex justify-between text-sm mb-1"><span class="font-mono font-medium text-gray-700">Total_Spend</span><span class="text-gray-400 text-xs">0.162</span></div>
+        <div class="bar-track"><div class="bar-fill bg-violet-500" style="width:87%"></div></div>
+      </div>
+      <div>
+        <div class="flex justify-between text-sm mb-1"><span class="font-mono font-medium text-gray-700">Frequency</span><span class="text-gray-400 text-xs">0.143</span></div>
+        <div class="bar-track"><div class="bar-fill bg-violet-500" style="width:76%"></div></div>
+      </div>
+      <div>
+        <div class="flex justify-between text-sm mb-1"><span class="font-mono font-medium text-gray-700">Customer_LTV</span><span class="text-gray-400 text-xs">0.121</span></div>
+        <div class="bar-track"><div class="bar-fill bg-indigo-400" style="width:65%"></div></div>
+      </div>
+      <div>
+        <div class="flex justify-between text-sm mb-1"><span class="font-mono font-medium text-gray-700">Transaction_Count</span><span class="text-gray-400 text-xs">0.098</span></div>
+        <div class="bar-track"><div class="bar-fill bg-indigo-400" style="width:52%"></div></div>
+      </div>
+      <div>
+        <div class="flex justify-between text-sm mb-1"><span class="font-mono font-medium text-gray-700">Avg_Order_Value</span><span class="text-gray-400 text-xs">0.087</span></div>
+        <div class="bar-track"><div class="bar-fill bg-blue-400" style="width:47%"></div></div>
+      </div>
+      <div>
+        <div class="flex justify-between text-sm mb-1"><span class="font-mono font-medium text-gray-700">Customer_Tenure_Days</span><span class="text-gray-400 text-xs">0.072</span></div>
+        <div class="bar-track"><div class="bar-fill bg-blue-400" style="width:39%"></div></div>
+      </div>
+      <div>
+        <div class="flex justify-between text-sm mb-1"><span class="font-mono font-medium text-gray-700">Pct_Cancelled</span><span class="text-gray-400 text-xs">0.054</span></div>
+        <div class="bar-track"><div class="bar-fill bg-blue-300" style="width:29%"></div></div>
+      </div>
+      <div>
+        <div class="flex justify-between text-sm mb-1"><span class="font-mono font-medium text-gray-700">RFM_Score</span><span class="text-gray-400 text-xs">0.043</span></div>
+        <div class="bar-track"><div class="bar-fill bg-blue-300" style="width:23%"></div></div>
+      </div>
+      <div>
+        <div class="flex justify-between text-sm mb-1"><span class="font-mono font-medium text-gray-700">Unique_Categories</span><span class="text-gray-400 text-xs">0.033</span></div>
+        <div class="bar-track"><div class="bar-fill bg-sky-300" style="width:18%"></div></div>
+      </div>
+    </div>
+    <p class="text-xs text-gray-400 mt-4">Recency dominates — customers who haven't purchased recently are the strongest churn signal.</p>
+  </div>
+
+  <!-- Feature importance images from API -->
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="img-card h-64 cursor-zoom-in" onclick="openLightbox('http://localhost:8000/static/reports/feature_importance_xgb.png')">
+        <div class="fallback bg-gradient-to-br from-violet-50 to-purple-100">
+          <div class="text-4xl mb-2 opacity-30">📊</div>
+          <p class="text-xs font-medium text-gray-500">XGBoost Feature Importance</p>
+          <p class="text-xs text-gray-400 mt-1">Start API server to view</p>
+        </div>
+        <img src="http://localhost:8000/static/reports/feature_importance_xgb.png" alt="XGBoost Feature Importance" class="contain" onerror="this.style.display='none'"/>
+      </div>
+      <div class="p-4"><h3 class="font-semibold">XGBoost — Feature Importance</h3><p class="text-xs text-gray-500 mt-1">Gain-based importances from the churn prediction model</p></div>
+    </div>
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="img-card h-64 cursor-zoom-in" onclick="openLightbox('http://localhost:8000/static/reports/feature_importance_analysis.png')">
+        <div class="fallback bg-gradient-to-br from-blue-50 to-indigo-100">
+          <div class="text-4xl mb-2 opacity-30">🔍</div>
+          <p class="text-xs font-medium text-gray-500">Feature Analysis</p>
+          <p class="text-xs text-gray-400 mt-1">Start API server to view</p>
+        </div>
+        <img src="http://localhost:8000/static/reports/feature_importance_analysis.png" alt="Feature Analysis" class="contain" onerror="this.style.display='none'"/>
+      </div>
+      <div class="p-4"><h3 class="font-semibold">Feature Importance Analysis</h3><p class="text-xs text-gray-500 mt-1">EDA-stage importance across all candidate features</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+     TAB 5 · STATISTICAL TESTING
+════════════════════════════════════════════════════════════════════════════ -->
+<div id="tab-stats" class="tab-panel max-w-7xl mx-auto px-4 py-8">
+
+  <div class="bg-white rounded-2xl p-6 shadow-sm mb-6">
+    <h2 class="text-xl font-bold">Notebook 05 — Statistical Testing</h2>
+    <p class="text-sm text-gray-500 mt-1">Hypothesis tests at α = 0.05 to validate business assumptions before ML modelling.</p>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-6 mb-8">
+
+    <!-- Hypothesis tests -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm">
+      <h3 class="font-bold mb-4">Tests Performed</h3>
+      <div class="space-y-3">
+        <div class="flex items-center justify-between gap-3 p-3 bg-green-50 rounded-xl border border-green-100">
+          <div>
+            <p class="font-semibold text-sm text-gray-800">Kruskal-Wallis H-test</p>
+            <p class="text-xs text-gray-500">Spend across RFM segments</p>
+          </div>
+          <div class="text-right shrink-0">
+            <span class="inline-block bg-green-100 text-green-800 text-xs font-bold px-2 py-0.5 rounded">SIGNIFICANT</span>
+            <p class="text-xs text-gray-400 mt-1">p &lt; 0.001</p>
+          </div>
+        </div>
+        <div class="flex items-center justify-between gap-3 p-3 bg-green-50 rounded-xl border border-green-100">
+          <div>
+            <p class="font-semibold text-sm text-gray-800">Mann-Whitney U-test</p>
+            <p class="text-xs text-gray-500">Fraud amount vs. legitimate</p>
+          </div>
+          <div class="text-right shrink-0">
+            <span class="inline-block bg-green-100 text-green-800 text-xs font-bold px-2 py-0.5 rounded">SIGNIFICANT</span>
+            <p class="text-xs text-gray-400 mt-1">p &lt; 0.001</p>
+          </div>
+        </div>
+        <div class="flex items-center justify-between gap-3 p-3 bg-yellow-50 rounded-xl border border-yellow-100">
+          <div>
+            <p class="font-semibold text-sm text-gray-800">Shapiro-Wilk Test</p>
+            <p class="text-xs text-gray-500">Revenue distribution normality</p>
+          </div>
+          <div class="text-right shrink-0">
+            <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-0.5 rounded">NON-NORMAL</span>
+            <p class="text-xs text-gray-400 mt-1">p &lt; 0.001</p>
+          </div>
+        </div>
+        <div class="flex items-center justify-between gap-3 p-3 bg-gray-50 rounded-xl border border-gray-200">
+          <div>
+            <p class="font-semibold text-sm text-gray-800">Chi-Squared Test</p>
+            <p class="text-xs text-gray-500">Gender × Product category</p>
+          </div>
+          <div class="text-right shrink-0">
+            <span class="inline-block bg-gray-100 text-gray-700 text-xs font-bold px-2 py-0.5 rounded">NOT SIG.</span>
+            <p class="text-xs text-gray-400 mt-1">p = 0.18</p>
+          </div>
+        </div>
+        <div class="flex items-center justify-between gap-3 p-3 bg-green-50 rounded-xl border border-green-100">
+          <div>
+            <p class="font-semibold text-sm text-gray-800">Spearman Correlation</p>
+            <p class="text-xs text-gray-500">Recency vs. Churn outcome</p>
+          </div>
+          <div class="text-right shrink-0">
+            <span class="inline-block bg-green-100 text-green-800 text-xs font-bold px-2 py-0.5 rounded">SIGNIFICANT</span>
+            <p class="text-xs text-gray-400 mt-1">p &lt; 0.001</p>
+          </div>
+        </div>
+        <div class="flex items-center justify-between gap-3 p-3 bg-green-50 rounded-xl border border-green-100">
+          <div>
+            <p class="font-semibold text-sm text-gray-800">One-way ANOVA</p>
+            <p class="text-xs text-gray-500">Product rating across categories</p>
+          </div>
+          <div class="text-right shrink-0">
+            <span class="inline-block bg-green-100 text-green-800 text-xs font-bold px-2 py-0.5 rounded">SIGNIFICANT</span>
+            <p class="text-xs text-gray-400 mt-1">p &lt; 0.05</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key Findings -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm">
+      <h3 class="font-bold mb-4">Key Findings &amp; Implications</h3>
+      <div class="space-y-3">
+        <div class="bg-green-50 border border-green-200 rounded-xl p-4">
+          <p class="font-semibold text-green-800 text-sm">✅ Churn correlates strongly with RFM</p>
+          <p class="text-sm text-green-700 mt-1">Kruskal-Wallis confirmed RFM features differ significantly between churned and retained customers. Validates using RFM as the primary feature group for churn modelling.</p>
+        </div>
+        <div class="bg-green-50 border border-green-200 rounded-xl p-4">
+          <p class="font-semibold text-green-800 text-sm">✅ Revenue is right-skewed (log-normal)</p>
+          <p class="text-sm text-green-700 mt-1">Shapiro-Wilk confirmed non-normality. Log-transformation was applied for CLV regression, yielding R² = 0.931 on the Ridge model.</p>
+        </div>
+        <div class="bg-green-50 border border-green-200 rounded-xl p-4">
+          <p class="font-semibold text-green-800 text-sm">✅ Fraud amounts are statistically distinct</p>
+          <p class="text-sm text-green-700 mt-1">Mann-Whitney U confirmed fraudulent transactions have significantly higher amounts and occur more outside business hours — validating Amount as the key fraud feature.</p>
+        </div>
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <p class="font-semibold text-blue-800 text-sm">ℹ️ Gender does not predict category preference</p>
+          <p class="text-blue-700 text-sm mt-1">Chi-squared (p = 0.18) — no significant gender–category association. Personalisation must rely on behaviour, not demographics alone.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Churn distribution chart image -->
+  <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+    <div class="p-5 border-b"><h3 class="font-bold">Churn vs. Retained — Distribution Comparison</h3><p class="text-xs text-gray-500 mt-0.5">Notebook 05 output · feature distributions split by churn label</p></div>
+    <div class="img-card h-72 cursor-zoom-in" onclick="openLightbox('http://localhost:8000/static/reports/churn_distribution.png')">
+      <div class="fallback bg-gradient-to-br from-orange-50 to-red-100">
+        <div class="text-4xl mb-2 opacity-30">📉</div>
+        <p class="text-xs font-medium text-gray-500">Churn Distribution Chart</p>
+        <p class="text-xs text-gray-400 mt-1">Start API server to view</p>
+      </div>
+      <img src="http://localhost:8000/static/reports/churn_distribution.png" alt="Churn Distribution" class="contain" onerror="this.style.display='none'"/>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+     TAB 6 · MODEL RESULTS
+════════════════════════════════════════════════════════════════════════════ -->
+<div id="tab-models" class="tab-panel max-w-7xl mx-auto px-4 py-8">
+
+  <div class="bg-white rounded-2xl p-6 shadow-sm mb-6">
+    <h2 class="text-xl font-bold">Notebooks 06a–06g · 07 — Model Training &amp; Evaluation</h2>
+    <p class="text-sm text-gray-500 mt-1">7 ML models trained, evaluated, and deployed. All scores are on held-out test sets.</p>
+  </div>
+
+  <!-- Summary table -->
+  <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-8">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50 border-b">
+        <tr class="text-left text-xs text-gray-500 uppercase tracking-wide">
+          <th class="px-5 py-3">Task</th>
+          <th class="px-5 py-3">Type</th>
+          <th class="px-5 py-3">Best Model</th>
+          <th class="px-5 py-3">Key Metric</th>
+          <th class="px-5 py-3">Score</th>
+          <th class="px-5 py-3">Models Compared</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-50">
+        <tr class="hover:bg-blue-50 transition-colors">
+          <td class="px-5 py-3.5 font-semibold">Churn Prediction</td>
+          <td class="px-5 py-3.5 text-gray-500">Binary Classification</td>
+          <td class="px-5 py-3.5"><span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-0.5 rounded">Wide &amp; Deep</span></td>
+          <td class="px-5 py-3.5 text-gray-500">ROC-AUC</td>
+          <td class="px-5 py-3.5 font-bold text-green-600">0.8962</td>
+          <td class="px-5 py-3.5 text-gray-400">3</td>
+        </tr>
+        <tr class="hover:bg-blue-50 transition-colors">
+          <td class="px-5 py-3.5 font-semibold">CLV Prediction</td>
+          <td class="px-5 py-3.5 text-gray-500">Regression</td>
+          <td class="px-5 py-3.5"><span class="bg-green-100 text-green-800 text-xs font-bold px-2 py-0.5 rounded">Ridge</span></td>
+          <td class="px-5 py-3.5 text-gray-500">R²</td>
+          <td class="px-5 py-3.5 font-bold text-green-600">0.9308</td>
+          <td class="px-5 py-3.5 text-gray-400">4</td>
+        </tr>
+        <tr class="hover:bg-blue-50 transition-colors">
+          <td class="px-5 py-3.5 font-semibold">Fraud Detection</td>
+          <td class="px-5 py-3.5 text-gray-500">Imbalanced Classification</td>
+          <td class="px-5 py-3.5"><span class="bg-red-100 text-red-800 text-xs font-bold px-2 py-0.5 rounded">XGBoost</span></td>
+          <td class="px-5 py-3.5 text-gray-500">PR-AUC</td>
+          <td class="px-5 py-3.5 font-bold text-green-600">0.9632</td>
+          <td class="px-5 py-3.5 text-gray-400">3</td>
+        </tr>
+        <tr class="hover:bg-blue-50 transition-colors">
+          <td class="px-5 py-3.5 font-semibold">Customer Segmentation</td>
+          <td class="px-5 py-3.5 text-gray-500">Clustering</td>
+          <td class="px-5 py-3.5"><span class="bg-purple-100 text-purple-800 text-xs font-bold px-2 py-0.5 rounded">KMeans k=5</span></td>
+          <td class="px-5 py-3.5 text-gray-500">Silhouette</td>
+          <td class="px-5 py-3.5 font-bold text-blue-600">0.2570</td>
+          <td class="px-5 py-3.5 text-gray-400">3</td>
+        </tr>
+        <tr class="hover:bg-blue-50 transition-colors">
+          <td class="px-5 py-3.5 font-semibold">Recommendations</td>
+          <td class="px-5 py-3.5 text-gray-500">Collaborative Filtering</td>
+          <td class="px-5 py-3.5"><span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-0.5 rounded">Wide &amp; Deep</span></td>
+          <td class="px-5 py-3.5 text-gray-500">RMSE ↓</td>
+          <td class="px-5 py-3.5 font-bold text-blue-600">2.423</td>
+          <td class="px-5 py-3.5 text-gray-400">3</td>
+        </tr>
+        <tr class="hover:bg-blue-50 transition-colors">
+          <td class="px-5 py-3.5 font-semibold">Demand Forecasting</td>
+          <td class="px-5 py-3.5 text-gray-500">Time-Series Regression</td>
+          <td class="px-5 py-3.5"><span class="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-0.5 rounded">Holt-Winters</span></td>
+          <td class="px-5 py-3.5 text-gray-500">RMSE ↓</td>
+          <td class="px-5 py-3.5 font-bold text-blue-600">35.23</td>
+          <td class="px-5 py-3.5 text-gray-400">3</td>
+        </tr>
+        <tr class="hover:bg-blue-50 transition-colors">
+          <td class="px-5 py-3.5 font-semibold">Sentiment Analysis</td>
+          <td class="px-5 py-3.5 text-gray-500">Multi-class Classification</td>
+          <td class="px-5 py-3.5"><span class="bg-pink-100 text-pink-800 text-xs font-bold px-2 py-0.5 rounded">BiLSTM</span></td>
+          <td class="px-5 py-3.5 text-gray-500">Weighted F1</td>
+          <td class="px-5 py-3.5 font-bold text-green-600">0.9627</td>
+          <td class="px-5 py-3.5 text-gray-400">2</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Performance charts from reports/ -->
+  <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="img-card h-52 cursor-zoom-in" onclick="openLightbox('http://localhost:8000/static/reports/master_evaluation_overview.png')">
+        <div class="fallback bg-gradient-to-br from-slate-100 to-slate-200">
+          <div class="text-4xl mb-2 opacity-30">🏆</div>
+          <p class="text-xs font-medium text-gray-500">Master Evaluation Overview</p>
+          <p class="text-xs text-gray-400 mt-1">Start API server to view</p>
+        </div>
+        <img src="http://localhost:8000/static/reports/master_evaluation_overview.png" alt="Master Evaluation" class="contain" onerror="this.style.display='none'"/>
+      </div>
+      <div class="p-4"><h3 class="font-semibold">Master Performance Overview</h3><p class="text-xs text-gray-500 mt-1">All 7 models compared across unified metrics dashboard</p></div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="img-card h-52 cursor-zoom-in" onclick="openLightbox('http://localhost:8000/static/reports/churn_performance_dashboard.png')">
+        <div class="fallback bg-gradient-to-br from-blue-50 to-blue-100">
+          <div class="text-4xl mb-2 opacity-30">📊</div>
+          <p class="text-xs font-medium text-gray-500">Churn Performance</p>
+          <p class="text-xs text-gray-400 mt-1">Start API server to view</p>
+        </div>
+        <img src="http://localhost:8000/static/reports/churn_performance_dashboard.png" alt="Churn Performance" class="contain" onerror="this.style.display='none'"/>
+      </div>
+      <div class="p-4"><h3 class="font-semibold">Churn — Performance Dashboard</h3><p class="text-xs text-gray-500 mt-1">LightGBM / XGBoost / Wide &amp; Deep comparison · ROC-AUC ~0.896</p></div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="img-card h-52 cursor-zoom-in" onclick="openLightbox('http://localhost:8000/static/reports/churn_roc_pr_curves.png')">
+        <div class="fallback bg-gradient-to-br from-indigo-50 to-indigo-100">
+          <div class="text-4xl mb-2 opacity-30">📈</div>
+          <p class="text-xs font-medium text-gray-500">Churn ROC / PR Curves</p>
+          <p class="text-xs text-gray-400 mt-1">Start API server to view</p>
+        </div>
+        <img src="http://localhost:8000/static/reports/churn_roc_pr_curves.png" alt="Churn ROC/PR" class="contain" onerror="this.style.display='none'"/>
+      </div>
+      <div class="p-4"><h3 class="font-semibold">Churn — ROC &amp; PR Curves</h3><p class="text-xs text-gray-500 mt-1">All three churn models overlaid for direct comparison</p></div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="img-card h-52 cursor-zoom-in" onclick="openLightbox('http://localhost:8000/static/reports/clv_actual_vs_predicted.png')">
+        <div class="fallback bg-gradient-to-br from-green-50 to-green-100">
+          <div class="text-4xl mb-2 opacity-30">💰</div>
+          <p class="text-xs font-medium text-gray-500">CLV Actual vs Predicted</p>
+          <p class="text-xs text-gray-400 mt-1">Start API server to view</p>
+        </div>
+        <img src="http://localhost:8000/static/reports/clv_actual_vs_predicted.png" alt="CLV Actual vs Predicted" class="contain" onerror="this.style.display='none'"/>
+      </div>
+      <div class="p-4"><h3 class="font-semibold">CLV — Actual vs Predicted</h3><p class="text-xs text-gray-500 mt-1">Ridge regression · R² = 0.9308 on held-out test set</p></div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="img-card h-52 cursor-zoom-in" onclick="openLightbox('http://localhost:8000/static/reports/fraud_distribution.png')">
+        <div class="fallback bg-gradient-to-br from-red-50 to-red-100">
+          <div class="text-4xl mb-2 opacity-30">🚨</div>
+          <p class="text-xs font-medium text-gray-500">Fraud Distribution</p>
+          <p class="text-xs text-gray-400 mt-1">Start API server to view</p>
+        </div>
+        <img src="http://localhost:8000/static/reports/fraud_distribution.png" alt="Fraud Distribution" class="contain" onerror="this.style.display='none'"/>
+      </div>
+      <div class="p-4"><h3 class="font-semibold">Fraud — Amount Distribution</h3><p class="text-xs text-gray-500 mt-1">Fraudulent vs legitimate transaction amounts · XGBoost PR-AUC 0.9632</p></div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="img-card h-52 cursor-zoom-in" onclick="openLightbox('http://localhost:8000/static/reports/forecast_timeseries.png')">
+        <div class="fallback bg-gradient-to-br from-amber-50 to-amber-100">
+          <div class="text-4xl mb-2 opacity-30">📅</div>
+          <p class="text-xs font-medium text-gray-500">Demand Forecast</p>
+          <p class="text-xs text-gray-400 mt-1">Start API server to view</p>
+        </div>
+        <img src="http://localhost:8000/static/reports/forecast_timeseries.png" alt="Demand Forecast" class="contain" onerror="this.style.display='none'"/>
+      </div>
+      <div class="p-4"><h3 class="font-semibold">Demand — Time Series Forecast</h3><p class="text-xs text-gray-500 mt-1">Holt-Winters with trend &amp; seasonality · RMSE 35.23</p></div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="img-card h-52 cursor-zoom-in" onclick="openLightbox('http://localhost:8000/static/reports/segmentation_pca_clusters.png')">
+        <div class="fallback bg-gradient-to-br from-violet-50 to-violet-100">
+          <div class="text-4xl mb-2 opacity-30">🔵</div>
+          <p class="text-xs font-medium text-gray-500">Segmentation PCA</p>
+          <p class="text-xs text-gray-400 mt-1">Start API server to view</p>
+        </div>
+        <img src="http://localhost:8000/static/reports/segmentation_pca_clusters.png" alt="Segmentation PCA" class="contain" onerror="this.style.display='none'"/>
+      </div>
+      <div class="p-4"><h3 class="font-semibold">Segmentation — PCA Cluster View</h3><p class="text-xs text-gray-500 mt-1">5 segments in 2D PCA space · Silhouette = 0.257</p></div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="img-card h-52 cursor-zoom-in" onclick="openLightbox('http://localhost:8000/static/reports/sentiment_confusion_matrix.png')">
+        <div class="fallback bg-gradient-to-br from-pink-50 to-pink-100">
+          <div class="text-4xl mb-2 opacity-30">💬</div>
+          <p class="text-xs font-medium text-gray-500">Sentiment Confusion Matrix</p>
+          <p class="text-xs text-gray-400 mt-1">Start API server to view</p>
+        </div>
+        <img src="http://localhost:8000/static/reports/sentiment_confusion_matrix.png" alt="Sentiment Confusion Matrix" class="contain" onerror="this.style.display='none'"/>
+      </div>
+      <div class="p-4"><h3 class="font-semibold">Sentiment — Confusion Matrix</h3><p class="text-xs text-gray-500 mt-1">BiLSTM · Weighted F1 = 0.9627 across Positive / Neutral / Negative</p></div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="img-card h-52 cursor-zoom-in" onclick="openLightbox('http://localhost:8000/static/reports/clv_shap_bar.png')">
+        <div class="fallback bg-gradient-to-br from-teal-50 to-teal-100">
+          <div class="text-4xl mb-2 opacity-30">🎯</div>
+          <p class="text-xs font-medium text-gray-500">CLV SHAP Values</p>
+          <p class="text-xs text-gray-400 mt-1">Start API server to view</p>
+        </div>
+        <img src="http://localhost:8000/static/reports/clv_shap_bar.png" alt="CLV SHAP" class="contain" onerror="this.style.display='none'"/>
+      </div>
+      <div class="p-4"><h3 class="font-semibold">CLV — SHAP Explainability</h3><p class="text-xs text-gray-500 mt-1">Feature contribution to CLV prediction — interpretability layer</p></div>
+    </div>
+
+  </div>
+
+  <div class="bg-blue-50 border border-blue-200 rounded-2xl p-5 flex items-center justify-between gap-4 flex-wrap">
+    <div>
+      <p class="font-bold text-blue-900">Want to try the models live?</p>
+      <p class="text-sm text-blue-700 mt-1">All 7 models are served via the FastAPI backend at localhost:8000</p>
+    </div>
+    <div class="flex gap-3 flex-wrap">
+      <a href="churn.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700">→ Churn Predictor</a>
+      <a href="models.html" class="bg-white text-blue-700 border border-blue-300 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-50">→ All Models</a>
+    </div>
+  </div>
+</div>
+
+<!-- ── Lightbox ─────────────────────────────────────────────────────────────── -->
+<div id="lightbox" class="hidden fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4 cursor-zoom-out" onclick="closeLightbox()">
+  <img id="lbImg" class="max-w-full max-h-full rounded-2xl shadow-2xl"/>
+</div>
+
+<footer class="bg-white border-t border-gray-200 py-6 mt-8">
+  <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
+    <div>
+      <p class="font-bold text-gray-800">🛒 EcomAnalytics &nbsp;·&nbsp; <span class="text-blue-700 font-semibold">VIF</span></p>
+      <p class="text-xs text-gray-400 mt-1">Built by <span class="font-semibold text-gray-600">Sekar Kumaran</span> &nbsp;·&nbsp; <a href="mailto:visioninnovateforge@gmail.com" class="hover:text-blue-600">visioninnovateforge@gmail.com</a></p>
+    </div>
+    <div class="flex flex-wrap gap-4 text-gray-500">
+      <a href="index.html" class="hover:text-blue-600">Home</a>
+      <a href="casestudies.html" class="hover:text-blue-600">Case Studies</a>
+      <a href="models.html" class="hover:text-blue-600">Models</a>
+      <a href="http://localhost:8000/docs" target="_blank" class="hover:text-blue-600">API Docs</a>
+      <a href="../expert/index.html" class="text-slate-600 font-semibold hover:text-slate-900">Expert View →</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script>
+// Health badge
+updateHealthBadge(document.getElementById('healthBadge'));
+
+// Tab switcher
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      b.classList.remove('active');
+      b.classList.add('text-gray-500', 'bg-gray-50');
+      b.classList.remove('bg-white', 'text-blue-700', 'font-bold');
+    });
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+    btn.classList.add('active');
+    btn.classList.remove('text-gray-500', 'bg-gray-50');
+    const panel = document.getElementById('tab-' + btn.dataset.tab);
+    if (panel) { panel.classList.add('active', 'fade-in'); }
+  });
+});
+
+// Lightbox
+function openLightbox(src) {
+  document.getElementById('lbImg').src = src;
+  document.getElementById('lightbox').classList.remove('hidden');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.add('hidden');
+  document.getElementById('lbImg').src = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+</body>
+</html>

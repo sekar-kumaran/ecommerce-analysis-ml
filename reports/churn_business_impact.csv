@@ -1,0 +1,4 @@
+Model,TP,FP,FN,Revenue_Saved_$,Intervention_Cost_$,Net_Benefit_$,Missed_Revenue_$
+Wide & Deep,9287,2197,383,3250450.0,574200,2676250.0,191500
+LightGBM,0,0,9670,0.0,0,0.0,4835000
+XGBoost,0,0,9670,0.0,0,0.0,4835000

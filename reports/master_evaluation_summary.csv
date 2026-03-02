@@ -1,0 +1,8 @@
+Category,Task,Best_Model,Key_Metric,Score,N_Models
+A — Churn Prediction,Binary Classification,Wide & Deep,ROC-AUC,0.8961908249654594,3
+B — CLV Prediction,Regression,Ridge,R²,0.9308403757890057,4
+C — Fraud Detection,Binary Classification (imbalanced),XGBoost,PR-AUC,0.9631536729318606,3
+D — Customer Segmentation,Clustering (unsupervised),KMeans,Silhouette,0.2569767511979694,3
+E — Recommendation,Collaborative Filtering,Wide & Deep,RMSE ↓,2.4233617186212815,3
+F — Demand Forecasting,Time-Series Regression,Holt-Winters,RMSE ↓,35.22783268890451,3
+G — Sentiment Analysis,Multi-class Classification,BiLSTM,Weighted F1,0.9626773171014117,2

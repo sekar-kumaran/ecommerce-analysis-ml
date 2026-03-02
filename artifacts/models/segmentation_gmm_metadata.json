@@ -1,0 +1,13 @@
+{
+  "model_type": "Gaussian Mixture Model",
+  "created_at": "2026-02-27T18:14:16.906547",
+  "n_components": 2,
+  "covariance_type": "full",
+  "metrics": {
+    "silhouette_score": 0.2539776070703177,
+    "davies_bouldin_index": 1.4931518675294875,
+    "bic": -1100970.5653749055,
+    "aic": -1104165.9639872352,
+    "avg_confidence": 0.9866497408711392
+  }
+}

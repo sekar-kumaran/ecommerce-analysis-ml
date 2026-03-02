@@ -1,0 +1,12 @@
+{
+  "model_version": "20260220_204816",
+  "model_type": "LSTM",
+  "created_at": "2026-02-20T21:03:32.775155",
+  "lookback": 14,
+  "metrics": {
+    "rmse": 32.120275200367224,
+    "mae": 26.586405436197918,
+    "mape": 3.1948218325417916
+  },
+  "training_epochs": 14
+}

@@ -1,0 +1,16 @@
+{
+  "model_version": "20260220_211402",
+  "model_type": "Bidirectional LSTM",
+  "created_at": "2026-02-20T21:55:48.334547",
+  "max_words": 5000,
+  "max_len": 50,
+  "embedding_dim": 128,
+  "lstm_units": 64,
+  "metrics": {
+    "accuracy": 0.9596857247267533,
+    "precision_weighted": 0.9641913240790214,
+    "recall_weighted": 0.9596857247267533,
+    "f1_weighted": 0.9609082312011927
+  },
+  "training_epochs": 5
+}

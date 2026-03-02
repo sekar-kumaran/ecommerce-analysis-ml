@@ -1,0 +1,19 @@
+{
+  "model_version": "20260227_183815",
+  "model_type": "TF-IDF + Logistic Regression",
+  "created_at": "2026-02-27T18:38:45.193411",
+  "n_train_samples": 240804,
+  "n_test_samples": 60202,
+  "n_features": 446,
+  "metrics": {
+    "accuracy": 0.9621939470449486,
+    "precision_weighted": 0.9661025676584208,
+    "recall_weighted": 0.9621939470449486,
+    "f1_weighted": 0.9632618462616854
+  },
+  "classes": [
+    "Negative",
+    "Neutral",
+    "Positive"
+  ]
+}

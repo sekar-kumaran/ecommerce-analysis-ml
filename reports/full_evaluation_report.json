@@ -1,0 +1,244 @@
+{
+  "evaluation_date": "2026-02-28T21:18:34.568001",
+  "categories": {
+    "A_Churn": {
+      "LightGBM": {
+        "Model": "LightGBM",
+        "Accuracy": 0.44258704173391744,
+        "Precision": 0.0,
+        "Recall": 0.0,
+        "F1": 0.0,
+        "ROC_AUC": 0.5090794472341098,
+        "Avg_Prec": 0.5757847053492221,
+        "Log_Loss": 3.190780155688937,
+        "Specificity": 0.9999999999998697,
+        "TP": 0.0,
+        "FP": 0.0,
+        "TN": 7678.0,
+        "FN": 9670.0
+      },
+      "XGBoost": {
+        "Model": "XGBoost",
+        "Accuracy": 0.44258704173391744,
+        "Precision": 0.0,
+        "Recall": 0.0,
+        "F1": 0.0,
+        "ROC_AUC": 0.43926230762330654,
+        "Avg_Prec": 0.5220313689111578,
+        "Log_Loss": 3.632595894412987,
+        "Specificity": 0.9999999999998697,
+        "TP": 0.0,
+        "FP": 0.0,
+        "TN": 7678.0,
+        "FN": 9670.0
+      },
+      "Wide & Deep": {
+        "Model": "Wide & Deep",
+        "Accuracy": 0.8512796864191837,
+        "Precision": 0.8086903517938001,
+        "Recall": 0.960392967942089,
+        "F1": 0.8780372506381772,
+        "ROC_AUC": 0.8961908249654594,
+        "Avg_Prec": 0.8753374948902038,
+        "Log_Loss": 0.34745906927838277,
+        "Specificity": 0.7138577754622669,
+        "TP": 9287.0,
+        "FP": 2197.0,
+        "TN": 5481.0,
+        "FN": 383.0
+      }
+    },
+    "B_CLV": {
+      "LightGBM": {
+        "Model": "LightGBM",
+        "RMSE": 17890.68963409834,
+        "MAE": 17705.1182531241,
+        "R2": -30.055398064113692,
+        "MAPE": 1026.490658541594
+      },
+      "XGBoost": {
+        "Model": "XGBoost",
+        "RMSE": 17664.72287903396,
+        "MAE": 17477.632304129664,
+        "R2": -29.27586739244583,
+        "MAPE": 988.4961041894719
+      },
+      "RF": {
+        "Model": "RF",
+        "RMSE": 16544.792272180828,
+        "MAE": 16358.871857299057,
+        "R2": -25.55862424317023,
+        "MAPE": 960.94988394341
+      },
+      "Ridge": {
+        "Model": "Ridge",
+        "RMSE": 844.2767776638185,
+        "MAE": 566.0259698840534,
+        "R2": 0.9308403757890057,
+        "MAPE": 27.804879636142697
+      }
+    },
+    "C_Fraud": {
+      "XGBoost": {
+        "Model": "XGBoost",
+        "Accuracy": 0.9898674462642437,
+        "Precision": 0.7105658487731598,
+        "Recall": 0.9779462439696761,
+        "F1": 0.8230858468677494,
+        "ROC_AUC": 0.9989171438183418,
+        "Avg_Prec": 0.9631536729318606,
+        "Log_Loss": 0.024558359255157678,
+        "Specificity": 0.9901618695851817,
+        "TP": 1419.0,
+        "FP": 578.0,
+        "TN": 58173.0,
+        "FN": 32.0
+      },
+      "Isolation Forest": {
+        "Model": "Isolation Forest",
+        "Accuracy": 0.9440217932959037,
+        "Precision": 0.048045219029674985,
+        "Recall": 0.07029634734665748,
+        "F1": 0.05707890318970341,
+        "ROC_AUC": 0.664988103315537,
+        "Avg_Prec": 0.042032545693038825,
+        "TP": 102.0,
+        "FP": 2021.0,
+        "TN": 56730.0,
+        "FN": 1349.0
+      },
+      "Autoencoder": {
+        "Model": "Autoencoder",
+        "Accuracy": 0.8902029832895917,
+        "Precision": 0.038303203866117776,
+        "Recall": 0.1474844934527912,
+        "F1": 0.06081273088945723,
+        "ROC_AUC": 0.577490693854606,
+        "Avg_Prec": 0.03373922786408117,
+        "TP": 214.0,
+        "FP": 5373.0,
+        "TN": 53378.0,
+        "FN": 1237.0
+      }
+    },
+    "D_Segmentation": {
+      "KMeans": {
+        "Model": "KMeans",
+        "Silhouette": 0.2569767511979694,
+        "DB_Index": 1.4258235440638851,
+        "CH_Score": 39503.04443224314,
+        "N_Clusters": 2.0
+      },
+      "DBSCAN": {
+        "Model": "DBSCAN",
+        "Silhouette": NaN,
+        "DB_Index": NaN,
+        "CH_Score": NaN,
+        "N_Clusters": 1.0
+      },
+      "GMM": {
+        "Model": "GMM",
+        "Silhouette": 0.25265120584223505,
+        "DB_Index": 1.4931518675294875,
+        "CH_Score": 35413.057076075325,
+        "N_Clusters": 2.0
+      }
+    },
+    "E_Recommendation": {
+      "NCF": {
+        "Model": "NCF",
+        "RMSE": 2.585940956602225,
+        "MAE": 1.9238816965532206,
+        "RMSE_Imp": 23.10883811491855,
+        "MAE_Imp": 23.50761168288558
+      },
+      "SVD": {
+        "Model": "SVD",
+        "RMSE": 2.618541347199914,
+        "MAE": 1.9505859418111375,
+        "RMSE_Imp": 22.139488097639948,
+        "MAE_Imp": 22.445866825265885
+      },
+      "Wide & Deep": {
+        "Model": "Wide & Deep",
+        "RMSE": 2.4233617186212815,
+        "MAE": 1.8612989647276235,
+        "RMSE_Imp": 27.943019063570745,
+        "MAE_Imp": 25.995863758533407
+      }
+    },
+    "F_Forecasting": {
+      "LightGBM": {
+        "Model": "LightGBM",
+        "RMSE": 39.268454403224965,
+        "MAE": 32.23729691508192,
+        "MAPE": 3.891263364854565
+      },
+      "Holt-Winters": {
+        "Model": "Holt-Winters",
+        "RMSE": 35.22783268890451,
+        "MAE": 28.720614887961585,
+        "MAPE": 3.4729052083993475
+      },
+      "SARIMA": {
+        "Model": "SARIMA",
+        "RMSE": 35.40516142443106,
+        "MAE": 28.81559925832296,
+        "MAPE": 3.4816138952610918
+      }
+    },
+    "G_Sentiment": {
+      "TF-IDF + LR": {
+        "Model": "TF-IDF + LR",
+        "Accuracy": 0.9615295172917844,
+        "Precision_W": 0.9656123592998931,
+        "Recall_W": 0.9615295172917844,
+        "F1_Weighted": 0.9626409521577209
+      },
+      "BiLSTM": {
+        "Model": "BiLSTM",
+        "Accuracy": 0.9615627387794425,
+        "Precision_W": 0.9656660646568339,
+        "Recall_W": 0.9615627387794425,
+        "F1_Weighted": 0.9626773171014117
+      }
+    }
+  },
+  "master_summary": {
+    "A_Churn": {
+      "best_model": "Wide & Deep",
+      "best_roc_auc": 0.8961908249654594,
+      "n_models": 3
+    },
+    "B_CLV": {
+      "best_model": "Ridge",
+      "best_r2": 0.9308403757890057,
+      "n_models": 4
+    },
+    "C_Fraud": {
+      "best_model": "XGBoost",
+      "best_pr_auc": 0.9631536729318606,
+      "n_models": 3
+    },
+    "D_Segmentation": {
+      "best_model": "KMeans",
+      "best_silhouette": 0.2569767511979694,
+      "n_models": 3
+    },
+    "E_Recommendation": {
+      "best_model": "Wide & Deep",
+      "best_rmse": 2.4233617186212815,
+      "n_models": 3
+    },
+    "F_Forecasting": {
+      "best_model": "Holt-Winters",
+      "best_rmse": 35.22783268890451,
+      "n_models": 3
+    },
+    "G_Sentiment": {
+      "best_model": "BiLSTM",
+      "best_f1": 0.9626773171014117,
+      "n_models": 2
+    }
+  }
+}

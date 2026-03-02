@@ -1,0 +1,33 @@
+PRODUCTION DEPLOYMENT RECOMMENDATIONS
+
+1. MODEL SELECTION
+   Primary model:  XGBoost + SMOTE (highest recall)
+   Backup model:   XGBoost + SMOTE (best F1-Score)
+   Consider ensemble voting for high-value transactions.
+
+2. THRESHOLD RECOMMENDATIONS
+   High recall  (threshold=0.3):  catches 98.7% of fraud, 653 false positives for review
+   Balanced     (threshold=0.5):  catches 97.8% of fraud, 578 false positives for review
+   High precision (threshold=0.7): catches 95.9% of fraud, 458 false positives for review
+
+3. MONITORING
+   Alert if daily fraud rate exceeds 3.62%
+   Monitor false-positive rate — target < 5%
+   Weekly model performance review
+   Monthly retrain to capture new fraud patterns
+
+4. MANUAL REVIEW QUEUE
+   All flagged transactions sent to review queue, sorted by fraud probability
+   High-value transactions (>$1,000) escalated automatically
+
+5. API INTEGRATION
+   Model:   ../artifacts/models/fraud_xgboost.pkl
+   Scaler:  ../artifacts/scalers/fraud_scaler.pkl
+   SMOTE:   ../artifacts/encoders/smote.pkl (retraining only)
+   Input:   61 features
+   Output:  fraud probability [0, 1]
+
+6. BUSINESS IMPACT
+   Fraud catch rate:        97.8%
+   False positives (test):  578 transactions
+   Total review workload:   1,997 transactions

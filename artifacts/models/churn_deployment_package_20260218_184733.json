@@ -1,0 +1,71 @@
+{
+  "model_version": "20260218_184733",
+  "best_model": "Wide_Deep",
+  "model_file": "churn_widedeep_20260218_184733.keras",
+  "scaler_file": "churn_scaler_20260218_184733.pkl",
+  "feature_names": [
+    "Transaction_Count",
+    "Total_Spend",
+    "Avg_Order_Value",
+    "Std_Order_Value",
+    "Frequency",
+    "Customer_Tenure_Days",
+    "Transactions_Per_Month",
+    "Customer_LTV",
+    "Avg_Days_Between_Purchases",
+    "Order_Value_CV",
+    "Frequency_Score",
+    "Monetary_Score",
+    "Historical_Txn_Count",
+    "Historical_Spend",
+    "Preferred_Hour",
+    "Weekend_Purchase_Pct",
+    "Preferred_Day_Encoded",
+    "Unique_Categories",
+    "Category_Entropy",
+    "Unique_Brands",
+    "Avg_Rating",
+    "Std_Rating",
+    "Min_Rating",
+    "Max_Rating",
+    "Is_Satisfied_Customer",
+    "Payment_Method_Changes",
+    "Shipping_Method_Changes",
+    "Pct_Shipped",
+    "Pct_Processing",
+    "Pct_Cancelled",
+    "Avg_Cart_Size",
+    "Max_Cart_Size",
+    "Std_Cart_Size",
+    "Age"
+  ],
+  "removed_features": [
+    "Purchase_Velocity_Ratio",
+    "RFM_Score",
+    "Recency_Days",
+    "Recency_Score",
+    "Recent_Spend",
+    "Recent_Txn_Count",
+    "Spending_Velocity_Ratio"
+  ],
+  "threshold": 0.5,
+  "expected_performance": {
+    "roc_auc": 0.896,
+    "precision": 0.812,
+    "recall": 0.9542,
+    "f1_score": 0.8774
+  },
+  "deployment_instructions": [
+    "1. Load scaler and transform input features",
+    "2. Remove leakage features from input",
+    "3. Apply scaling transformation",
+    "4. Load best model and predict probabilities",
+    "5. Apply threshold (default 0.5) for binary classification",
+    "6. Return churn probability and prediction"
+  ],
+  "monitoring": [
+    "Monitor ROC-AUC score monthly",
+    "Alert if AUC drops below 0.75",
+    "Retrain quarterly or when performance degrades"
+  ]
+}

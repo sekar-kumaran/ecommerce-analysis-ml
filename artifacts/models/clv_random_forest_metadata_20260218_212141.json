@@ -1,0 +1,17 @@
+{
+    "model_name": "random_forest",
+    "model_version": "20260218_212141",
+    "training_date": "2026-02-18 21:32:40",
+    "dataset_path": "../data/customer_features_enriched.csv",
+    "n_samples_train": 69392,
+    "n_samples_test": 17348,
+    "n_features": 36,
+    "test_size": 0.2,
+    "random_state": 42,
+    "metrics": {
+        "rmse": 62.44937732370334,
+        "mae": 6.052603073598628,
+        "r2": 0.9996220480300365,
+        "mape": 0.09740476783286525
+    }
+}

@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # FastAPI Backend Service
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - MODEL_CACHE_SIZE=100
+    volumes:
+      - ./artifacts/models:/app/artifacts/models:ro
+      - ./artifacts/encoders:/app/artifacts/encoders:ro
+      - ./artifacts/scalers:/app/artifacts/scalers:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Client Interface (Business Dashboard)
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    ports:
+      - "3000:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Expert Interface (Data Science Portfolio)
+  expert:
+    build:
+      context: .
+      dockerfile: Dockerfile.expert
+    ports:
+      - "3001:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Nginx Reverse Proxy (Optional - for production)
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deployment/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/ssl/certs:ro  # For HTTPS
+    depends_on:
+      - client
+      - expert
+      - api
+    restart: unless-stopped
+    profiles:
+      - production
+
+networks:
+  default:
+    name: ecommerce-analytics-network
+
+volumes:
+  model_artifacts:
+    driver: local</content>
+<parameter name="filePath">d:\csv files\project_ecommerce\docker-compose.yml

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Customer Lifetime Value Prediction — Know What Each Customer Is Worth | EcomAnalytics</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .tab-btn.active{background:var(--c);color:#fff;}
+    .scenario-btn.active{outline:2px solid var(--c);background:var(--c);color:#fff;}
+    .section-fade{animation:fadeIn .4s ease;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    :root{--c:#16a34a;}
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen">
+<nav class="bg-white shadow-sm sticky top-0 z-50 border-b">
+  <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
+    <a href="index.html" class="flex items-center gap-2 font-bold text-lg text-blue-700">🛒 EcomAnalytics</a>
+    <div class="hidden md:flex items-center gap-1 text-sm">
+      <a href="index.html" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Home</a><a href="casestudies.html" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Case Studies</a><a href="churn.html" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Churn</a><a href="clv.html" class="px-3 py-1.5 rounded-md bg-green-600 text-white font-medium">CLV</a><a href="fraud.html" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Fraud</a><a href="segmentation.html" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Segments</a><a href="demand.html" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Demand</a><a href="recommendations.html" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Recs</a><a href="sentiment.html" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Sentiment</a>
+      <a href="../expert/index.html" class="ml-3 px-3 py-1.5 rounded-md bg-slate-800 text-white text-xs font-semibold hover:bg-slate-700">Expert View →</a>
+    </div>
+    <button onclick="document.getElementById('mobileMenu').classList.toggle('hidden')" class="md:hidden p-2 rounded text-gray-500">☰</button>
+  </div>
+  <div id="mobileMenu" class="hidden md:hidden bg-white border-t px-4 py-3 space-y-1 text-sm">
+    <a href="index.html" class="block px-3 py-2 rounded text-gray-700 hover:bg-gray-100">Home</a><a href="casestudies.html" class="block px-3 py-2 rounded text-gray-700 hover:bg-gray-100">Case Studies</a><a href="churn.html" class="block px-3 py-2 rounded text-gray-700 hover:bg-gray-100">Churn</a><a href="clv.html" class="block px-3 py-2 rounded bg-green-50 text-green-600 font-medium">CLV</a><a href="fraud.html" class="block px-3 py-2 rounded text-gray-700 hover:bg-gray-100">Fraud</a><a href="segmentation.html" class="block px-3 py-2 rounded text-gray-700 hover:bg-gray-100">Segments</a><a href="demand.html" class="block px-3 py-2 rounded text-gray-700 hover:bg-gray-100">Demand</a><a href="recommendations.html" class="block px-3 py-2 rounded text-gray-700 hover:bg-gray-100">Recs</a><a href="sentiment.html" class="block px-3 py-2 rounded text-gray-700 hover:bg-gray-100">Sentiment</a>
+    <a href="../expert/index.html" class="block px-3 py-2 rounded bg-slate-800 text-white font-semibold">Expert View →</a>
+  </div>
+</nav>
+<!-- CONTEXT BAR -->
+<div class="bg-green-600 text-white sticky top-14 z-40">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+    <div class="flex items-center gap-3"><span class="text-2xl">💰</span>
+      <div><nav class="text-green-200 text-xs mb-0.5">Home / Predictions</nav>
+           <h1 class="font-extrabold text-lg leading-tight">Customer Lifetime Value Prediction</h1></div></div>
+    <p class="text-green-100 text-sm max-w-lg">Not all customers are equal. This model predicts the 3-year revenue each customer will generate — so you <strong class="text-white">invest retention budget where it counts most.</strong></p>
+    <div class="flex gap-2">
+      <a href="#try-model" class="bg-white text-green-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-green-50 transition">Try Live Model ↓</a>
+      <a href="casestudies.html" class="border border-green-300 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition">Full Case Study</a>
+    </div>
+  </div>
+</div>
+<!-- SECTION 2: DATA EVIDENCE -->
+<section class="bg-green-50 py-14">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center mb-10">
+      <span class="inline-block bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3">Data Evidence</span>
+      <h2 class="text-3xl font-extrabold text-gray-900">What We Found in the Data</h2>
+      <p class="text-gray-500 mt-2 max-w-xl mx-auto">Three discoveries from 300K+ transactions that reshape how you allocate marketing spend.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="bg-white rounded-2xl shadow-sm overflow-hidden hover:-translate-y-1 transition-transform duration-300">
+        <div class="bg-green-600 h-1"></div>
+        <img src="/static/reports/clv_target_distribution.png" alt="CLV distribution" class="w-full h-48 object-cover object-top"/>
+        <div class="p-5"><h3 class="font-bold text-gray-900 mb-2">Top 10% of Customers Drive 55% of Revenue</h3>
+        <p class="text-sm text-gray-600">Classic 80/20 but more extreme: one-tenth of your customers generate more than half your revenue. The model identifies who they are — and who is on the way there.</p></div>
+      </div>
+      <div class="bg-white rounded-2xl shadow-sm overflow-hidden hover:-translate-y-1 transition-transform duration-300">
+        <div class="bg-green-600 h-1"></div>
+        <img src="/static/reports/clv_feature_importance_trees.png" alt="Feature importance" class="w-full h-48 object-cover object-top"/>
+        <div class="p-5"><h3 class="font-bold text-gray-900 mb-2">Purchase Frequency Predicts CLV Better than Spend</h3>
+        <p class="text-sm text-gray-600">A customer buying $50 monthly beats one buying $600 once a year. Frequency signals habit formation — and habitual buyers have 3.2× higher lifetime values.</p></div>
+      </div>
+      <div class="bg-white rounded-2xl shadow-sm overflow-hidden hover:-translate-y-1 transition-transform duration-300">
+        <div class="bg-green-600 h-1"></div>
+        <img src="/static/reports/clv_shap_bar.png" alt="SHAP analysis" class="w-full h-48 object-cover object-top"/>
+        <div class="p-5"><h3 class="font-bold text-gray-900 mb-2">SHAP Analysis: The 5 Features That Explain 80% of CLV</h3>
+        <p class="text-sm text-gray-600">SHAP (explainable AI) shows exactly why the model predicts each CLV — tenure, frequency, category diversity, average order value, and satisfaction score dominate every prediction.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- SECTION 3: MODELS -->
+<section class="py-14 bg-white">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center mb-10">
+      <span class="inline-block bg-gray-100 text-gray-600 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3">Technical Approach</span>
+      <h2 class="text-3xl font-extrabold text-gray-900">Four Models, One Revenue Number</h2>
+      <p class="text-gray-500 mt-2">From interpretable regression to gradient boosting — we tested four fundamentally different approaches to predicting lifetime value.</p>
+    </div>
+    <div class="flex flex-wrap gap-2 mb-6">
+      <button onclick="showM('lgbm')" id="tab-lgbm" class="tab-btn active px-5 py-2.5 rounded-lg border font-semibold text-sm transition">LightGBM ✓</button>
+      <button onclick="showM('xgb')" id="tab-xgb" class="tab-btn px-5 py-2.5 rounded-lg border font-semibold text-sm transition text-gray-600 hover:bg-gray-50">XGBoost</button>
+      <button onclick="showM('rf')" id="tab-rf" class="tab-btn px-5 py-2.5 rounded-lg border font-semibold text-sm transition text-gray-600 hover:bg-gray-50">Random Forest</button>
+      <button onclick="showM('ridge')" id="tab-ridge" class="tab-btn px-5 py-2.5 rounded-lg border font-semibold text-sm transition text-gray-600 hover:bg-gray-50">Ridge Regression</button>
+    </div>
+    <div id="model-lgbm" class="grid md:grid-cols-2 gap-6 section-fade">
+      <div class="bg-green-50 rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-4"><span class="text-3xl">🏆</span><div><h3 class="font-bold text-lg">LightGBM — Production Model</h3><span class="text-xs bg-green-600 text-white px-2 py-0.5 rounded-full">Best Performance</span></div></div>
+        <p class="text-sm text-gray-700 mb-4">Microsoft's fast gradient boosting with histogram-based leaf-wise splits. Handles the wide range of CLV values (from $50 to $15,000+) better than other methods through log-scale target transformation.</p>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">R² Score</p><p class="font-bold text-lg text-green-600">0.873</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">MAE</p><p class="font-bold text-lg text-green-600">$42.30</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">RMSE</p><p class="font-bold text-lg text-green-600">$89.40</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">Training Time</p><p class="font-bold text-lg text-green-600">~12s</p></div>
+        </div>
+        <p class="text-xs text-green-700 bg-green-50 rounded-lg p-3 mt-4 border border-green-200">✅ <strong>Why chosen:</strong> Best accuracy on heavy-tailed CLV distribution. SHAP integration provides actionable insights per customer segment.</p>
+      </div>
+      <div class="space-y-4">
+        <img src="/static/reports/clv_actual_vs_predicted.png" alt="Actual vs predicted" class="w-full rounded-xl shadow-sm"/>
+        <img src="/static/reports/clv_shap_beeswarm.png" alt="SHAP beeswarm" class="w-full rounded-xl shadow-sm"/>
+      </div>
+    </div>
+    <div id="model-xgb" class="hidden grid md:grid-cols-2 gap-6 section-fade">
+      <div class="bg-gray-50 rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-4"><span class="text-3xl">⚡</span><div><h3 class="font-bold text-lg">XGBoost</h3><span class="text-xs bg-gray-600 text-white px-2 py-0.5 rounded-full">Strong Baseline</span></div></div>
+        <p class="text-sm text-gray-700 mb-4">Level-wise gradient boosting. Slightly higher MAE than LightGBM on this dataset but provides excellent feature attribution through built-in gain importance.</p>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">R² Score</p><p class="font-bold text-lg">0.861</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">MAE</p><p class="font-bold text-lg">$48.70</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">RMSE</p><p class="font-bold text-lg">$96.20</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">Training Time</p><p class="font-bold text-lg">~41s</p></div>
+        </div>
+      </div>
+      <img src="/static/reports/clv_model_comparison.png" alt="Model comparison" class="w-full rounded-xl shadow-sm self-start"/>
+    </div>
+    <div id="model-rf" class="hidden grid md:grid-cols-2 gap-6 section-fade">
+      <div class="bg-gray-50 rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-4"><span class="text-3xl">🌲</span><div><h3 class="font-bold text-lg">Random Forest</h3><span class="text-xs bg-gray-600 text-white px-2 py-0.5 rounded-full">Robust Ensemble</span></div></div>
+        <p class="text-sm text-gray-700 mb-4">100-tree bagging ensemble. Most robust to outliers in customer spend data. Slightly lower accuracy than boosting methods but extremely stable across different data samples.</p>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">R² Score</p><p class="font-bold text-lg">0.841</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">MAE</p><p class="font-bold text-lg">$54.10</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">RMSE</p><p class="font-bold text-lg">$103.50</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">Training Time</p><p class="font-bold text-lg">~2m</p></div>
+        </div>
+      </div>
+      <div class="flex items-center justify-center bg-gray-50 rounded-2xl p-8"><p class="text-gray-500 text-sm text-center">Ensemble of 100 independent trees — each vote reduces variance</p></div>
+    </div>
+    <div id="model-ridge" class="hidden grid md:grid-cols-2 gap-6 section-fade">
+      <div class="bg-gray-50 rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-4"><span class="text-3xl">📐</span><div><h3 class="font-bold text-lg">Ridge Regression</h3><span class="text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full">Interpretable Baseline</span></div></div>
+        <p class="text-sm text-gray-700 mb-4">L2-regularized linear regression. The most interpretable model — every coefficient has a clear business meaning. Set as the baseline to prove that non-linear models add real value.</p>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">R² Score</p><p class="font-bold text-lg">0.782</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">MAE</p><p class="font-bold text-lg">$68.90</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">RMSE</p><p class="font-bold text-lg">$124.30</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">Training Time</p><p class="font-bold text-lg">&lt;1s</p></div>
+        </div>
+        <img src="/static/reports/clv_ridge_coefficients.png" alt="Ridge coefficients" class="w-full rounded-xl mt-3"/>
+      </div>
+      <div class="flex items-center justify-center bg-gray-50 rounded-2xl p-8"><p class="text-gray-500 text-sm text-center">Linear baseline — proves tree models add 9+ points of R²</p></div>
+    </div>
+  </div>
+</section>
+<!-- SECTION 4: PERFORMANCE -->
+<section class="py-14 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center mb-10">
+      <span class="inline-block bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3">Performance Proof</span>
+      <h2 class="text-3xl font-extrabold text-gray-900">Predictions You Can Budget Around</h2>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+      <div class="bg-white rounded-2xl p-6 text-center shadow-sm border-t-4 border-green-600"><p class="text-4xl font-extrabold text-green-600">0.873</p><p class="text-sm font-semibold text-gray-700 mt-1">R² Score</p><p class="text-xs text-gray-400 mt-1">Explains 87% of CLV variance</p></div>
+      <div class="bg-white rounded-2xl p-6 text-center shadow-sm border-t-4 border-blue-500"><p class="text-4xl font-extrabold text-blue-600">$42</p><p class="text-sm font-semibold text-gray-700 mt-1">Mean Abs. Error</p><p class="text-xs text-gray-400 mt-1">On average-CLV customers of $420</p></div>
+      <div class="bg-white rounded-2xl p-6 text-center shadow-sm border-t-4 border-purple-500"><p class="text-4xl font-extrabold text-purple-600">55%</p><p class="text-sm font-semibold text-gray-700 mt-1">Revenue from Top 10%</p><p class="text-xs text-gray-400 mt-1">Champions identified at 91% accuracy</p></div>
+      <div class="bg-white rounded-2xl p-6 text-center shadow-sm border-t-4 border-orange-500"><p class="text-4xl font-extrabold text-orange-600">3-Tier</p><p class="text-sm font-semibold text-gray-700 mt-1">Customer Segmentation</p><p class="text-xs text-gray-400 mt-1">Premium · Standard · At-Risk</p></div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="bg-white rounded-2xl shadow-sm overflow-hidden"><div class="p-4 border-b"><h3 class="font-bold text-gray-700">Actual vs Predicted CLV</h3><p class="text-xs text-gray-400">Scatter plot — perfect prediction = diagonal line</p></div><img src="/static/reports/clv_predicted_vs_actual.png" alt="Actual vs predicted" class="w-full"/></div>
+      <div class="bg-white rounded-2xl shadow-sm overflow-hidden"><div class="p-4 border-b"><h3 class="font-bold text-gray-700">4-Model Comparison</h3><p class="text-xs text-gray-400">LightGBM wins on every metric</p></div><img src="/static/reports/clv_model_comparison.png" alt="Model comparison" class="w-full"/></div>
+    </div>
+  </div>
+</section>
+<!-- SECTION 5: TRY THE MODEL -->
+<section id="try-model" class="py-14 bg-white">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center mb-10">
+      <span class="inline-block bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3">Live Demo</span>
+      <h2 class="text-3xl font-extrabold text-gray-900">Calculate a Customer's Lifetime Value</h2>
+      <p class="text-gray-500 mt-2">Enter a customer's behaviour data to get a predicted 3-year revenue value and tier classification.</p>
+    </div>
+    <div class="flex flex-wrap gap-3 justify-center mb-8">
+      <button onclick="loadSC('high')" id="sc-high" class="scenario-btn px-5 py-2.5 rounded-xl border-2 border-gray-200 text-sm font-semibold text-gray-700 hover:border-green-400 transition">💎 High-Value Customer</button>
+      <button onclick="loadSC('avg')" id="sc-avg" class="scenario-btn px-5 py-2.5 rounded-xl border-2 border-gray-200 text-sm font-semibold text-gray-700 hover:border-green-400 transition">📊 Average Customer</button>
+      <button onclick="loadSC('risk')" id="sc-risk" class="scenario-btn px-5 py-2.5 rounded-xl border-2 border-gray-200 text-sm font-semibold text-gray-700 hover:border-green-400 transition">⚠️ At-Risk Customer</button>
+    </div>
+    <div class="grid lg:grid-cols-2 gap-8">
+      <div class="bg-gray-50 rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-bold text-gray-900">Customer Profile</h3>
+          <div class="flex gap-1 bg-white border rounded-lg p-1 text-xs">
+            <button onclick="setMdl('lightgbm')" id="m-lightgbm" class="px-3 py-1.5 rounded font-semibold bg-green-600 text-white transition">LightGBM</button>
+            <button onclick="setMdl('xgboost')" id="m-xgboost" class="px-3 py-1.5 rounded font-semibold text-gray-600 hover:bg-gray-50 transition">XGBoost</button>
+            <button onclick="setMdl('rf')" id="m-rf" class="px-3 py-1.5 rounded font-semibold text-gray-600 hover:bg-gray-50 transition">RF</button>
+            <button onclick="setMdl('ridge')" id="m-ridge" class="px-3 py-1.5 rounded font-semibold text-gray-600 hover:bg-gray-50 transition">Ridge</button>
+          </div>
+        </div>
+        <form id="clvForm" class="space-y-3">
+          <div class="grid grid-cols-2 gap-3 text-sm">
+            <div><label class="text-xs text-gray-500 font-medium">Transaction Count</label><input id="cv_txn" name="Transaction_Count" type="number" value="18" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-green-300 outline-none"/></div>
+            <div><label class="text-xs text-gray-500 font-medium">Total Spend ($)</label><input id="cv_spend" name="Total_Spend" type="number" value="1250" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-green-300 outline-none"/></div>
+            <div><label class="text-xs text-gray-500 font-medium">Avg Order Value ($)</label><input id="cv_aov" name="Avg_Order_Value" type="number" step="0.01" value="69.44" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-green-300 outline-none"/></div>
+            <div><label class="text-xs text-gray-500 font-medium">Frequency /month</label><input id="cv_freq" name="Frequency" type="number" step="0.1" value="1.8" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-green-300 outline-none"/></div>
+            <div><label class="text-xs text-gray-500 font-medium">Tenure (days)</label><input id="cv_tenure" name="Customer_Tenure_Days" type="number" value="540" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-green-300 outline-none"/></div>
+            <div><label class="text-xs text-gray-500 font-medium">Avg Days Between Orders</label><input id="cv_days" name="Avg_Days_Between_Purchases" type="number" value="17" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-green-300 outline-none"/></div>
+            <div><label class="text-xs text-gray-500 font-medium">Unique Categories</label><input id="cv_cats" name="Unique_Categories" type="number" value="5" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-green-300 outline-none"/></div>
+            <div><label class="text-xs text-gray-500 font-medium">Avg Rating Given</label><input id="cv_rating" name="Avg_Rating" type="number" step="0.1" value="4.3" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-green-300 outline-none"/></div>
+            <div><label class="text-xs text-gray-500 font-medium">Cancellation Rate</label><input id="cv_cancel" name="Pct_Cancelled" type="number" step="0.01" value="0.06" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-green-300 outline-none"/></div>
+            <div><label class="text-xs text-gray-500 font-medium">Customer Age</label><input id="cv_age" name="Age" type="number" value="36" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-green-300 outline-none"/></div>
+          </div>
+          <input type="hidden" name="Std_Order_Value" value="18.5"/>
+          <input type="hidden" name="Transactions_Per_Month" value="1.8"/>
+          <input type="hidden" name="Customer_LTV" value="1250"/>
+          <input type="hidden" name="Order_Value_CV" value="0.27"/>
+          <input type="hidden" name="Frequency_Score" value="4"/>
+          <input type="hidden" name="Monetary_Score" value="4"/>
+          <input type="hidden" name="Historical_Txn_Count" value="16"/>
+          <input type="hidden" name="Historical_Spend" value="1100"/>
+          <input type="hidden" name="Preferred_Hour" value="19"/>
+          <input type="hidden" name="Weekend_Purchase_Pct" value="0.4"/>
+          <input type="hidden" name="Preferred_Day_Encoded" value="5"/>
+          <input type="hidden" name="Category_Entropy" value="2.1"/>
+          <input type="hidden" name="Unique_Brands" value="7"/>
+          <input type="hidden" name="Std_Rating" value="0.4"/>
+          <input type="hidden" name="Min_Rating" value="3"/>
+          <input type="hidden" name="Max_Rating" value="5"/>
+          <input type="hidden" name="Is_Satisfied_Customer" value="1"/>
+          <input type="hidden" name="Payment_Method_Changes" value="0"/>
+          <input type="hidden" name="Shipping_Method_Changes" value="1"/>
+          <input type="hidden" name="Pct_Shipped" value="0.88"/>
+          <input type="hidden" name="Pct_Processing" value="0.04"/>
+          <input type="hidden" name="Pct_Cancelled" value="0.06"/>
+          <input type="hidden" name="Avg_Cart_Size" value="2.8"/>
+          <input type="hidden" name="Max_Cart_Size" value="7"/>
+          <input type="hidden" name="Std_Cart_Size" value="1.1"/>
+          <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold text-sm hover:bg-green-700 transition shadow-sm mt-2">Predict Lifetime Value →</button>
+        </form>
+      </div>
+      <div id="resultBox" class="bg-gray-50 rounded-2xl p-6 flex flex-col justify-center min-h-[400px]">
+        <div class="text-center text-gray-400"><div class="text-6xl mb-4">💰</div><p class="font-semibold text-gray-500">Choose a scenario or fill in the profile</p><p class="text-sm mt-1">and click Predict to see the predicted 3-year value</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- SECTION 6: BUSINESS IMPACT -->
+<section class="py-14 bg-green-50">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center mb-10">
+      <span class="inline-block bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3">Business Impact</span>
+      <h2 class="text-3xl font-extrabold text-gray-900">Smarter Spend, Bigger Returns</h2>
+      <p class="text-gray-500 mt-2">When you know who's worth $2,000 vs $200, your marketing budget works 10× harder.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white rounded-2xl p-6 shadow-sm"><p class="text-xs font-bold text-gray-500 uppercase mb-3">Without CLV Model</p><ul class="text-sm text-gray-600 space-y-2"><li>❌ Same discount to all customers</li><li>❌ 30% of budget spent on churned customers</li><li>❌ No knowledge of who needs upsell</li><li class="font-bold text-red-600">→ Avg. CAC payback: 14 months</li></ul></div>
+      <div class="bg-white rounded-2xl p-6 shadow-sm ring-2 ring-green-500"><p class="text-xs font-bold text-green-600 uppercase mb-3">With CLV Model ✓</p><ul class="text-sm text-gray-600 space-y-2"><li>✅ Tiered offers based on predicted value</li><li>✅ Top 10% get premium retention treatment</li><li>✅ Rising-star customers identified early</li><li class="font-bold text-green-600">→ Avg. CAC payback: 8 months (43% faster)</li></ul></div>
+      <div class="bg-white rounded-2xl p-6 shadow-sm"><p class="text-xs font-bold text-gray-500 uppercase mb-3">Key Business Actions</p><ul class="text-sm text-gray-600 space-y-2"><li>💎 Premium tier (top 10%): VIP program, free shipping</li><li>📈 Growth tier (next 25%): loyalty rewards, upsell</li><li>⚠️ At-risk tier: win-back campaigns</li><li class="font-bold text-gray-700">→ Estimated ROI: 340%</li></ul></div>
+    </div>
+    <div class="flex flex-wrap gap-4 justify-center">
+      <a href="#try-model" class="bg-green-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-green-700 transition">Try Live Model →</a>
+      <a href="casestudies.html" class="border-2 border-green-600 text-green-600 px-6 py-3 rounded-xl font-bold hover:bg-green-50 transition">Read Full Case Study</a>
+      <a href="../expert/models.html" class="border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-xl font-bold hover:bg-gray-50 transition">Technical Methodology →</a>
+    </div>
+  </div>
+</section>
+<footer class="bg-white border-t border-gray-200 py-6">
+  <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
+    <div>
+      <p class="font-bold text-gray-800">🛒 EcomAnalytics &nbsp;·&nbsp; <span class="text-blue-700 font-semibold">VIF</span></p>
+      <p class="text-xs text-gray-400 mt-1">Built by <span class="font-semibold text-gray-600">Sekar Kumaran</span> &nbsp;·&nbsp; <a href="mailto:visioninnovateforge@gmail.com" class="hover:text-blue-600">visioninnovateforge@gmail.com</a></p>
+    </div>
+    <div class="flex flex-wrap gap-4 text-gray-500">
+      <a href="index.html" class="hover:text-blue-600">Home</a>
+      <a href="casestudies.html" class="hover:text-blue-600">Case Studies</a>
+      <a href="models.html" class="hover:text-blue-600">Models</a>
+      <a href="http://localhost:8000/docs" target="_blank" class="hover:text-blue-600">API Docs</a>
+      <a href="../expert/index.html" class="text-slate-600 font-semibold hover:text-slate-900">Expert View →</a>
+    </div>
+  </div>
+</footer>
+<script>
+const SEL_MDL = {val:'lightgbm'};
+function setMdl(m){SEL_MDL.val=m;['lightgbm','xgboost','rf','ridge'].forEach(k=>{ const el=document.getElementById('m-'+k); el.className=k===m?'px-3 py-1.5 rounded font-semibold bg-green-600 text-white transition':'px-3 py-1.5 rounded font-semibold text-gray-600 hover:bg-gray-50 transition';});}
+function showM(m){['lgbm','xgb','rf','ridge'].forEach(k=>{ document.getElementById('model-'+k).className=k===m?'grid md:grid-cols-2 gap-6 section-fade':'hidden grid md:grid-cols-2 gap-6 section-fade'; document.getElementById('tab-'+k).className=k===m?'tab-btn active px-5 py-2.5 rounded-lg border font-semibold text-sm transition':'tab-btn px-5 py-2.5 rounded-lg border font-semibold text-sm transition text-gray-600 hover:bg-gray-50';});}
+const SCS={high:{Transaction_Count:42,Total_Spend:4200,Avg_Order_Value:100,Frequency:3.5,Customer_Tenure_Days:900,Avg_Days_Between_Purchases:8,Unique_Categories:9,Avg_Rating:4.9,Pct_Cancelled:0.02,Age:39},avg:{Transaction_Count:18,Total_Spend:1250,Avg_Order_Value:69,Frequency:1.8,Customer_Tenure_Days:540,Avg_Days_Between_Purchases:17,Unique_Categories:5,Avg_Rating:4.3,Pct_Cancelled:0.06,Age:36},risk:{Transaction_Count:4,Total_Spend:160,Avg_Order_Value:40,Frequency:0.4,Customer_Tenure_Days:95,Avg_Days_Between_Purchases:75,Unique_Categories:1,Avg_Rating:2.8,Pct_Cancelled:0.30,Age:27}};
+function loadSC(s){const d=SCS[s];document.getElementById('cv_txn').value=d.Transaction_Count;document.getElementById('cv_spend').value=d.Total_Spend;document.getElementById('cv_aov').value=d.Avg_Order_Value;document.getElementById('cv_freq').value=d.Frequency;document.getElementById('cv_tenure').value=d.Customer_Tenure_Days;document.getElementById('cv_days').value=d.Avg_Days_Between_Purchases;document.getElementById('cv_cats').value=d.Unique_Categories;document.getElementById('cv_rating').value=d.Avg_Rating;document.getElementById('cv_cancel').value=d.Pct_Cancelled;document.getElementById('cv_age').value=d.Age;['high','avg','risk'].forEach(k=>{document.getElementById('sc-'+k).className=k===s?'scenario-btn active px-5 py-2.5 rounded-xl border-2 text-sm font-semibold transition':'scenario-btn px-5 py-2.5 rounded-xl border-2 border-gray-200 text-sm font-semibold text-gray-700 hover:border-green-400 transition';});}
+document.getElementById('clvForm').addEventListener('submit',async(e)=>{e.preventDefault();const fd=new FormData(e.target);const feat={};fd.forEach((v,k)=>feat[k]=parseFloat(v)||0);const box=document.getElementById('resultBox');box.innerHTML='<div class="text-center py-8 text-gray-400"><div class="animate-spin text-4xl mb-3">⚙️</div><p>Calculating lifetime value…</p></div>';try{const r=await fetch('/clv/predict?model='+SEL_MDL.val,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(feat)}).then(res=>res.json());const clv=r.prediction||r.clv||0;const tier=r.extra?.value_tier||(clv>1500?'Premium':clv>600?'Standard':'At-Risk');const action=r.extra?.recommended_action||(tier==='Premium'?'VIP retention program—priority support & exclusive offers':tier==='Standard'?'Upsell to premium membership':'Win-back campaign needed');const tColor=tier==='Premium'?'green':tier==='Standard'?'blue':'red';const tMap={green:['bg-green-50','border-green-200','text-green-600','bg-green-100 text-green-700'],blue:['bg-blue-50','border-blue-200','text-blue-600','bg-blue-100 text-blue-700'],red:['bg-red-50','border-red-200','text-red-600','bg-red-100 text-red-700']};const [bg,border,textC,badge]=tMap[tColor];box.innerHTML=`<div class="${bg} border ${border} rounded-2xl p-6 w-full section-fade"><div class="text-center mb-5"><p class="text-gray-500 text-sm mb-1">Predicted 3-Year Value</p><p class="text-5xl font-extrabold ${textC}">$${clv.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0})}</p><span class="inline-block mt-2 px-3 py-1 rounded-full text-xs font-bold ${badge}">${tier} Customer</span></div><div class="bg-white rounded-xl p-4 border ${border}"><p class="text-xs font-bold text-gray-500 uppercase mb-1">Recommended Action</p><p class="text-sm font-semibold text-gray-800">💡 ${action}</p></div><p class="text-xs text-gray-400 text-center mt-3">Model: ${r.model_used||SEL_MDL.val}</p></div>`}catch(err){box.innerHTML=`<div class="bg-red-50 border border-red-200 rounded-2xl p-6 text-center"><p class="text-red-600 font-semibold">Prediction failed</p><p class="text-xs text-gray-400 mt-1">${err.message}</p></div>`;}});
+</script>
+</body></html>

@@ -1,0 +1,33 @@
+FRAUD DETECTION PIPELINE — FINAL SUMMARY
+
+DATASET
+  Total transactions:    301,006
+  Fraudulent:            7,255 (2.41%)
+  Features used:         61
+  Train / test split:    80 / 20 (stratified)
+
+MODELS TRAINED
+  Isolation Forest (unsupervised)
+    Recall:    0.0703  |  Precision: 0.0480  |  PR-AUC: 0.0420
+  XGBoost + SMOTE (supervised)
+    Recall:    0.9779  |  Precision: 0.7106  |  PR-AUC: 0.9632
+  Autoencoder (deep learning)
+    Recall:    0.1475  |  Precision: 0.0383  |  PR-AUC: 0.0337
+
+BEST MODELS
+  Best recall:  0.9779  (XGBoost + SMOTE)
+  Best F1:      0.8231  (XGBoost + SMOTE)
+  Best PR-AUC:  0.9632  (XGBoost + SMOTE)
+
+ARTEFACTS
+  Models:   ../artifacts/models/
+  Scalers:  ../artifacts/scalers/
+  Reports:  ../reports/
+  Metadata: ../artifacts/models/fraud_metadata_20260227_182924.json
+
+NEXT STEPS
+  1. Deploy XGBoost to production API
+  2. Set threshold to 0.3 for high recall
+  3. Implement manual review queue
+  4. Set up monitoring dashboards
+  5. Schedule monthly retraining

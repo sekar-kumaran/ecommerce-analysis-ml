@@ -1,0 +1,13 @@
+{
+  "model_type": "DBSCAN",
+  "created_at": "2026-02-27T18:08:31.636471",
+  "n_clusters": 1,
+  "n_outliers": 21,
+  "outlier_percentage": 0.024210283606179387,
+  "eps": 2.5,
+  "min_samples": 50,
+  "metrics": {
+    "silhouette_score": null,
+    "davies_bouldin_index": null
+  }
+}

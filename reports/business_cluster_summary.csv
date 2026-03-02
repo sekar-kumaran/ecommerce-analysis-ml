@@ -1,0 +1,3 @@
+Cluster_KMeans,Customer_Count,Avg_LTV,Avg_Transactions,Avg_Order_Value,Avg_Recency_Days,Avg_Rating,Segment_Label
+0,44395,6816.25,4.77,1460.68,58.74,3.16,Champions
+1,42345,2576.51,2.11,1271.83,135.21,3.17,Needs Attention

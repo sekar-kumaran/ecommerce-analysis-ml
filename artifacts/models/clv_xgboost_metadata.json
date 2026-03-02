@@ -1,0 +1,16 @@
+{
+    "model_name": "xgboost",
+    "training_date": "2026-02-27 18:28:46",
+    "dataset_path": "../data/customer_features_enriched.csv",
+    "n_train": 69392,
+    "n_test": 17348,
+    "n_features": 36,
+    "test_size": 0.2,
+    "random_state": 42,
+    "metrics": {
+        "rmse": 96.7547,
+        "mae": 66.4687,
+        "r2": 0.9991,
+        "mape": 2.3142
+    }
+}

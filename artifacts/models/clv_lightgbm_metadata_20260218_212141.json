@@ -1,0 +1,17 @@
+{
+    "model_name": "lightgbm",
+    "model_version": "20260218_212141",
+    "training_date": "2026-02-18 21:32:40",
+    "dataset_path": "../data/customer_features_enriched.csv",
+    "n_samples_train": 69392,
+    "n_samples_test": 17348,
+    "n_features": 36,
+    "test_size": 0.2,
+    "random_state": 42,
+    "metrics": {
+        "rmse": 133.6248911071142,
+        "mae": 95.02983406537501,
+        "r2": 0.9982695656914837,
+        "mape": 3.3546679238186243
+    }
+}

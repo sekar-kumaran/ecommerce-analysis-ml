@@ -1,0 +1,108 @@
+{
+  "model_version": "20260227_171118",
+  "created_at": "2026-02-27T17:13:10.119214",
+  "models": {
+    "lightgbm": "churn_lightgbm.pkl",
+    "xgboost": "churn_xgboost.pkl",
+    "wide_deep": "churn_widedeep.h5"
+  },
+  "scaler": "churn_scaler.pkl",
+  "feature_names": [
+    "Transaction_Count",
+    "Total_Spend",
+    "Avg_Order_Value",
+    "Std_Order_Value",
+    "Frequency",
+    "Customer_Tenure_Days",
+    "Transactions_Per_Month",
+    "Customer_LTV",
+    "Avg_Days_Between_Purchases",
+    "Order_Value_CV",
+    "Frequency_Score",
+    "Monetary_Score",
+    "Historical_Txn_Count",
+    "Historical_Spend",
+    "Preferred_Hour",
+    "Weekend_Purchase_Pct",
+    "Preferred_Day_Encoded",
+    "Unique_Categories",
+    "Category_Entropy",
+    "Unique_Brands",
+    "Avg_Rating",
+    "Std_Rating",
+    "Min_Rating",
+    "Max_Rating",
+    "Is_Satisfied_Customer",
+    "Payment_Method_Changes",
+    "Shipping_Method_Changes",
+    "Pct_Shipped",
+    "Pct_Processing",
+    "Pct_Cancelled",
+    "Avg_Cart_Size",
+    "Max_Cart_Size",
+    "Std_Cart_Size",
+    "Age"
+  ],
+  "config": {
+    "model_version": "20260227_171118",
+    "random_seed": 42,
+    "test_size": 0.2,
+    "cv_folds": 5,
+    "smote_sampling_strategy": 0.8,
+    "optimization_metric": "roc_auc",
+    "threshold_optimization": "f1"
+  },
+  "performance": [
+    {
+      "Model": "LightGBM",
+      "Accuracy": 0.851,
+      "Precision": 0.8142,
+      "Recall": 0.9493,
+      "F1": 0.8766,
+      "ROC-AUC": 0.8956,
+      "PR-AUC": 0.8754,
+      "MCC": 0.7044
+    },
+    {
+      "Model": "XGBoost",
+      "Accuracy": 0.8512,
+      "Precision": 0.8157,
+      "Recall": 0.9469,
+      "F1": 0.8764,
+      "ROC-AUC": 0.8957,
+      "PR-AUC": 0.8751,
+      "MCC": 0.7042
+    },
+    {
+      "Model": "Wide_Deep",
+      "Accuracy": 0.8513,
+      "Precision": 0.8087,
+      "Recall": 0.9604,
+      "F1": 0.878,
+      "ROC-AUC": 0.8962,
+      "PR-AUC": 0.8753,
+      "MCC": 0.708
+    }
+  ],
+  "best_model": "Wide_Deep",
+  "training_data": {
+    "train_samples": 69392,
+    "test_samples": 17348,
+    "n_features": 34,
+    "churn_rate_train": 0.5574129582660825,
+    "churn_rate_test": 0.5574129582660825,
+    "imbalance_method": "SMOTE + class weights"
+  },
+  "leakage_prevention": {
+    "removed_features": [
+      "Purchase_Velocity_Ratio",
+      "RFM_Score",
+      "Recency_Days",
+      "Recency_Score",
+      "Recent_Spend",
+      "Recent_Txn_Count",
+      "Spending_Velocity_Ratio"
+    ],
+    "n_removed": 7
+  }
+}

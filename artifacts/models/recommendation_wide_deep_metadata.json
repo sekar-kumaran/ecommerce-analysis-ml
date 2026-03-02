@@ -1,0 +1,27 @@
+{
+  "model_version": "20260227_171329",
+  "model_type": "Wide and Deep Recommender",
+  "created_at": "2026-02-27T17:20:52.380942",
+  "n_users": 86740,
+  "n_items": 5,
+  "embedding_size": 64,
+  "feature_columns": [
+    "Customer_Engagement_Score",
+    "Category_Exploration_Score",
+    "Brand_Diversity_Score",
+    "Transaction_Count"
+  ],
+  "metrics": {
+    "rmse": 2.4233617186212815,
+    "mae": 1.8612989647276235,
+    "rmse_improvement_pct": 27.943019063570745,
+    "mae_improvement_pct": 25.995863758533407
+  },
+  "training_epochs": 11,
+  "artifacts": {
+    "model": "../artifacts/models/recommendation_wide_deep.h5",
+    "scaler": "../artifacts/scalers/recommendation_feature_scaler.pkl",
+    "user_encoder": "../artifacts/encoders/recommendation_user_encoder.pkl",
+    "item_encoder": "../artifacts/encoders/recommendation_item_encoder.pkl"
+  }
+}

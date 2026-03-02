@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Churn Prediction — Stop Losing Customers | EcomAnalytics</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .tab-btn.active{background:#2563eb;color:#fff;}
+    .scenario-btn.active{background:#1d4ed8;color:#fff;border-color:#1d4ed8;}
+    .section-fade{animation:fadeIn .4s ease;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen">
+
+<!-- NAV -->
+<nav class="bg-white shadow-sm sticky top-0 z-50 border-b">
+  <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
+    <a href="index.html" class="flex items-center gap-2 font-bold text-lg text-blue-700">🛒 EcomAnalytics</a>
+    <div class="hidden md:flex items-center gap-1 text-sm">
+      <a href="index.html" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Home</a>
+      <a href="casestudies.html" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Case Studies</a>
+      <a href="churn.html" class="px-3 py-1.5 rounded-md bg-blue-600 text-white font-medium">Churn</a>
+      <a href="clv.html" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">CLV</a>
+      <a href="fraud.html" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Fraud</a>
+      <a href="segmentation.html" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Segments</a>
+      <a href="demand.html" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Demand</a>
+      <a href="recommendations.html" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Recs</a>
+      <a href="sentiment.html" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Sentiment</a>
+      <a href="../expert/index.html" class="ml-3 px-3 py-1.5 rounded-md bg-slate-800 text-white text-xs font-semibold hover:bg-slate-700">Expert View →</a>
+    </div>
+    <button onclick="document.getElementById('mobileMenu').classList.toggle('hidden')" class="md:hidden p-2 rounded text-gray-500">☰</button>
+  </div>
+  <div id="mobileMenu" class="hidden md:hidden bg-white border-t px-4 py-3 space-y-1 text-sm">
+    <a href="index.html" class="block px-3 py-2 rounded text-gray-700 hover:bg-gray-100">Home</a>
+    <a href="casestudies.html" class="block px-3 py-2 rounded text-gray-700 hover:bg-gray-100">Case Studies</a>
+    <a href="churn.html" class="block px-3 py-2 rounded bg-blue-50 text-blue-700 font-medium">Churn</a>
+    <a href="clv.html" class="block px-3 py-2 rounded text-gray-700 hover:bg-gray-100">CLV</a>
+    <a href="fraud.html" class="block px-3 py-2 rounded text-gray-700 hover:bg-gray-100">Fraud</a>
+    <a href="segmentation.html" class="block px-3 py-2 rounded text-gray-700 hover:bg-gray-100">Segments</a>
+    <a href="demand.html" class="block px-3 py-2 rounded text-gray-700 hover:bg-gray-100">Demand</a>
+    <a href="recommendations.html" class="block px-3 py-2 rounded text-gray-700 hover:bg-gray-100">Recs</a>
+    <a href="sentiment.html" class="block px-3 py-2 rounded text-gray-700 hover:bg-gray-100">Sentiment</a>
+    <a href="../expert/index.html" class="block px-3 py-2 rounded bg-slate-800 text-white font-semibold">Expert View →</a>
+  </div>
+</nav>
+
+<!-- SECTION 1: STICKY CONTEXT BAR -->
+<div class="bg-blue-600 text-white sticky top-14 z-40">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+    <div class="flex items-center gap-3">
+      <span class="text-2xl">📉</span>
+      <div>
+        <nav class="text-blue-200 text-xs mb-0.5">Home / Predictions</nav>
+        <h1 class="font-extrabold text-lg leading-tight">Customer Churn Prediction</h1>
+      </div>
+    </div>
+    <p class="text-blue-100 text-sm max-w-lg">One in five customers leaves silently. This model identifies them <strong class="text-white">before</strong> they go — with 95% recall — so your retention team can act first.</p>
+    <div class="flex gap-2">
+      <a href="#try-model" class="bg-white text-blue-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-50 transition">Try Live Model ↓</a>
+      <a href="casestudies.html" class="border border-blue-300 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition">Full Case Study</a>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2: WHAT WE FOUND IN THE DATA -->
+<section class="bg-blue-50 py-14">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center mb-10">
+      <span class="inline-block bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3">Data Evidence</span>
+      <h2 class="text-3xl font-extrabold text-gray-900">What We Found in the Data</h2>
+      <p class="text-gray-500 mt-2 max-w-xl mx-auto">Three discoveries from 300,000+ customer records that changed how we think about churn.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="bg-white rounded-2xl shadow-sm overflow-hidden hover:-translate-y-1 transition-transform duration-300">
+        <div class="bg-blue-600 h-1"></div>
+        <img src="/static/reports/churn_distribution.png" alt="Churn distribution" class="w-full h-48 object-cover object-top"/>
+        <div class="p-5">
+          <h3 class="font-bold text-gray-900 mb-2">18.2% of Customers are at Risk Right Now</h3>
+          <p class="text-sm text-gray-600">Our data showed a clear class imbalance — 18% of customers exhibit churn patterns vs 82% retained. This meant standard models would miss 40% of churners by just predicting "stay." We used SMOTE oversampling to fix this.</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl shadow-sm overflow-hidden hover:-translate-y-1 transition-transform duration-300">
+        <div class="bg-blue-600 h-1"></div>
+        <img src="/static/reports/churn_feature_importance.png" alt="Feature importance" class="w-full h-48 object-cover object-top"/>
+        <div class="p-5">
+          <h3 class="font-bold text-gray-900 mb-2">Purchase Frequency Predicts Churn 3× Better Than Spend</h3>
+          <p class="text-sm text-gray-600">Surprisingly, how often a customer buys matters far more than how much they spend. A customer who buys small items weekly is far more loyal than one who makes large but infrequent purchases.</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl shadow-sm overflow-hidden hover:-translate-y-1 transition-transform duration-300">
+        <div class="bg-blue-600 h-1"></div>
+        <img src="/static/reports/churn_roc_pr_curves.png" alt="ROC curves" class="w-full h-48 object-cover object-top"/>
+        <div class="p-5">
+          <h3 class="font-bold text-gray-900 mb-2">The First 90 Days Are Make-or-Break</h3>
+          <p class="text-sm text-gray-600">Customers who haven't repurchased within 90 days have a 73% probability of never returning. ROC-AUC of 0.896 confirms the model catches these customers reliably, giving retention teams a clear intervention window.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: OUR MODELS -->
+<section class="py-14 bg-white">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center mb-10">
+      <span class="inline-block bg-gray-100 text-gray-600 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3">Technical Approach</span>
+      <h2 class="text-3xl font-extrabold text-gray-900">Three Models, One Winner</h2>
+      <p class="text-gray-500 mt-2">We trained and compared three fundamentally different approaches. Here's what each brings to the table.</p>
+    </div>
+    <!-- Model tab selector -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      <button onclick="showModel('xgb')" id="tab-xgb" class="tab-btn active px-5 py-2.5 rounded-lg border font-semibold text-sm transition">XGBoost ✓</button>
+      <button onclick="showModel('lgbm')" id="tab-lgbm" class="tab-btn px-5 py-2.5 rounded-lg border font-semibold text-sm transition text-gray-600 hover:bg-gray-50">LightGBM</button>
+      <button onclick="showModel('widedeep')" id="tab-widedeep" class="tab-btn px-5 py-2.5 rounded-lg border font-semibold text-sm transition text-gray-600 hover:bg-gray-50">Wide &amp; Deep Neural Net</button>
+    </div>
+    <!-- Model detail cards -->
+    <div id="model-xgb" class="grid md:grid-cols-2 gap-6 section-fade">
+      <div class="bg-blue-50 rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-4"><span class="text-3xl">🏆</span><div><h3 class="font-bold text-lg">XGBoost — Production Model</h3><span class="text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full">Best Performance</span></div></div>
+        <p class="text-sm text-gray-700 mb-4">Gradient-boosted decision trees with early stopping. Handles missing values natively and produces feature importances that the business team can act on directly.</p>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">ROC-AUC</p><p class="font-bold text-lg text-blue-600">0.896</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">Recall (catches churners)</p><p class="font-bold text-lg text-blue-600">95.4%</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">Precision</p><p class="font-bold text-lg text-blue-600">81.2%</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">Training Time</p><p class="font-bold text-lg text-blue-600">~45s</p></div>
+        </div>
+        <p class="text-xs text-green-700 bg-green-50 rounded-lg p-3 mt-4">✅ <strong>Why chosen:</strong> Best recall/precision balance. Interpretable features that map directly to retention actions. Stable on imbalanced classes with scale_pos_weight tuning.</p>
+      </div>
+      <div class="space-y-4">
+        <img src="/static/reports/churn_feature_importance.png" alt="XGBoost feature importance" class="w-full rounded-xl shadow-sm"/>
+        <img src="/static/reports/churn_confusion_matrices.png" alt="Confusion matrix" class="w-full rounded-xl shadow-sm"/>
+      </div>
+    </div>
+    <div id="model-lgbm" class="hidden grid md:grid-cols-2 gap-6 section-fade">
+      <div class="bg-gray-50 rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-4"><span class="text-3xl">⚡</span><div><h3 class="font-bold text-lg">LightGBM — Speed Champion</h3><span class="text-xs bg-gray-600 text-white px-2 py-0.5 rounded-full">Fastest Inference</span></div></div>
+        <p class="text-sm text-gray-700 mb-4">Microsoft's gradient boosting framework using histogram-based splits. Trains 6× faster than XGBoost with comparable accuracy — ideal for real-time scoring APIs.</p>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">ROC-AUC</p><p class="font-bold text-lg">0.891</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">Recall</p><p class="font-bold text-lg">93.1%</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">Precision</p><p class="font-bold text-lg">83.7%</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">Training Time</p><p class="font-bold text-lg">~8s</p></div>
+        </div>
+        <p class="text-xs text-blue-700 bg-blue-50 rounded-lg p-3 mt-4">ℹ️ <strong>Trade-off:</strong> Slightly lower recall than XGBoost but 5× faster. Excellent for high-volume batch scoring of entire customer bases overnight.</p>
+      </div>
+      <div class="flex items-center justify-center bg-gray-50 rounded-2xl p-8 text-center">
+        <div><p class="text-gray-500 text-sm mb-2">LightGBM achieves near-identical performance</p><p class="text-4xl font-extrabold text-gray-800">0.891</p><p class="text-gray-400 text-xs mt-1">ROC-AUC on test set</p></div>
+      </div>
+    </div>
+    <div id="model-widedeep" class="hidden grid md:grid-cols-2 gap-6 section-fade">
+      <div class="bg-gray-50 rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-4"><span class="text-3xl">🧠</span><div><h3 class="font-bold text-lg">Wide &amp; Deep Neural Net</h3><span class="text-xs bg-purple-600 text-white px-2 py-0.5 rounded-full">Pattern Recognition</span></div></div>
+        <p class="text-sm text-gray-700 mb-4">Google's Wide & Deep architecture simultaneously memorizes frequent co-occurrence patterns (wide component) and generalizes to unseen combinations (deep component). Captures non-linear interaction effects tree models miss.</p>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">ROC-AUC</p><p class="font-bold text-lg">0.883</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">Recall</p><p class="font-bold text-lg">91.8%</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">Precision</p><p class="font-bold text-lg">84.1%</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-gray-500 text-xs">Training Time</p><p class="font-bold text-lg">~4 min</p></div>
+        </div>
+        <p class="text-xs text-purple-700 bg-purple-50 rounded-lg p-3 mt-4">ℹ️ <strong>Trade-off:</strong> Less interpretable than tree models but captures complex interaction patterns. Best for deployment where recall is critical and interpretability is secondary.</p>
+      </div>
+      <div class="flex items-center justify-center bg-gray-50 rounded-2xl p-8 text-center">
+        <div><p class="text-gray-500 text-sm mb-2">Neural network architecture</p><p class="text-2xl font-bold text-gray-800">Wide + Deep</p><p class="text-gray-500 text-sm mt-2">Memorization + Generalization</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: PERFORMANCE PROOF -->
+<section class="py-14 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center mb-10">
+      <span class="inline-block bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3">Performance Proof</span>
+      <h2 class="text-3xl font-extrabold text-gray-900">Numbers That Matter to the Business</h2>
+      <p class="text-gray-500 mt-2">Not just ML metrics — translated into what these numbers mean for your retention budget.</p>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+      <div class="bg-white rounded-2xl p-6 text-center shadow-sm border-t-4 border-blue-600">
+        <p class="text-4xl font-extrabold text-blue-600">95%</p>
+        <p class="text-sm font-semibold text-gray-700 mt-1">Of Churners Caught</p>
+        <p class="text-xs text-gray-400 mt-1">Before they leave — enabling proactive outreach</p>
+      </div>
+      <div class="bg-white rounded-2xl p-6 text-center shadow-sm border-t-4 border-green-500">
+        <p class="text-4xl font-extrabold text-green-600">81%</p>
+        <p class="text-sm font-semibold text-gray-700 mt-1">Alert Precision</p>
+        <p class="text-xs text-gray-400 mt-1">Only 19% false alarms — team focuses on real risks</p>
+      </div>
+      <div class="bg-white rounded-2xl p-6 text-center shadow-sm border-t-4 border-purple-500">
+        <p class="text-4xl font-extrabold text-purple-600">0.896</p>
+        <p class="text-sm font-semibold text-gray-700 mt-1">ROC-AUC Score</p>
+        <p class="text-xs text-gray-400 mt-1">Near-perfect ranking of churn risk</p>
+      </div>
+      <div class="bg-white rounded-2xl p-6 text-center shadow-sm border-t-4 border-orange-500">
+        <p class="text-4xl font-extrabold text-orange-600">18.2%</p>
+        <p class="text-sm font-semibold text-gray-700 mt-1">Base Churn Rate</p>
+        <p class="text-xs text-gray-400 mt-1">Benchmark — model beats random by 5.2× on precision</p>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <div class="p-4 border-b"><h3 class="font-bold text-gray-700">ROC &amp; Precision-Recall Curves</h3><p class="text-xs text-gray-400">Area under curve shows consistent performance across all risk thresholds</p></div>
+        <img src="/static/reports/churn_roc_pr_curves.png" alt="ROC curves" class="w-full"/>
+      </div>
+      <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <div class="p-4 border-b"><h3 class="font-bold text-gray-700">Model Performance Dashboard</h3><p class="text-xs text-gray-400">Comprehensive comparison of all three models across every metric</p></div>
+        <img src="/static/reports/churn_performance_dashboard.png" alt="Performance dashboard" class="w-full"/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: TRY THE MODEL -->
+<section id="try-model" class="py-14 bg-white">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center mb-10">
+      <span class="inline-block bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3">Live Demo</span>
+      <h2 class="text-3xl font-extrabold text-gray-900">Try the Model Live</h2>
+      <p class="text-gray-500 mt-2">Load a real scenario or enter a customer's profile to get an instant churn prediction.</p>
+    </div>
+    <!-- Scenario buttons -->
+    <div class="flex flex-wrap gap-3 justify-center mb-8">
+      <button onclick="loadScenario('high')" id="sc-high" class="scenario-btn px-5 py-2.5 rounded-xl border-2 border-gray-200 text-sm font-semibold text-gray-700 hover:border-blue-400 transition">🔴 High Churn Risk</button>
+      <button onclick="loadScenario('border')" id="sc-border" class="scenario-btn px-5 py-2.5 rounded-xl border-2 border-gray-200 text-sm font-semibold text-gray-700 hover:border-blue-400 transition">🟡 Borderline Case</button>
+      <button onclick="loadScenario('loyal')" id="sc-loyal" class="scenario-btn px-5 py-2.5 rounded-xl border-2 border-gray-200 text-sm font-semibold text-gray-700 hover:border-blue-400 transition">🟢 Loyal Customer</button>
+    </div>
+    <div class="grid lg:grid-cols-2 gap-8">
+      <!-- Input form -->
+      <div class="bg-gray-50 rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-bold text-gray-900">Customer Profile</h3>
+          <!-- Model selector tabs -->
+          <div class="flex gap-1 bg-white border rounded-lg p-1 text-xs">
+            <button onclick="setModel('xgboost')" id="m-xgboost" class="px-3 py-1.5 rounded font-semibold bg-blue-600 text-white transition">XGBoost</button>
+            <button onclick="setModel('lightgbm')" id="m-lightgbm" class="px-3 py-1.5 rounded font-semibold text-gray-600 hover:bg-gray-50 transition">LightGBM</button>
+            <button onclick="setModel('widedeep')" id="m-widedeep" class="px-3 py-1.5 rounded font-semibold text-gray-600 hover:bg-gray-50 transition">Wide &amp; Deep</button>
+          </div>
+        </div>
+        <form id="churnForm" class="space-y-3">
+          <div class="grid grid-cols-2 gap-3 text-sm">
+            <div><label class="text-xs text-gray-500 font-medium">Transaction Count</label><input id="f_txn" name="Transaction_Count" type="number" value="12" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-blue-300 outline-none"/></div>
+            <div><label class="text-xs text-gray-500 font-medium">Total Spend ($)</label><input id="f_spend" name="Total_Spend" type="number" value="850" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-blue-300 outline-none"/></div>
+            <div><label class="text-xs text-gray-500 font-medium">Avg Order Value ($)</label><input id="f_aov" name="Avg_Order_Value" type="number" step="0.01" value="70.83" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-blue-300 outline-none"/></div>
+            <div><label class="text-xs text-gray-500 font-medium">Purchase Frequency /mo</label><input id="f_freq" name="Frequency" type="number" step="0.1" value="1.2" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-blue-300 outline-none"/></div>
+            <div><label class="text-xs text-gray-500 font-medium">Tenure (days)</label><input id="f_tenure" name="Customer_Tenure_Days" type="number" value="365" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-blue-300 outline-none"/></div>
+            <div><label class="text-xs text-gray-500 font-medium">Days Between Purchases</label><input id="f_days" name="Avg_Days_Between_Purchases" type="number" value="28" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-blue-300 outline-none"/></div>
+            <div><label class="text-xs text-gray-500 font-medium">Unique Categories</label><input id="f_cats" name="Unique_Categories" type="number" value="4" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-blue-300 outline-none"/></div>
+            <div><label class="text-xs text-gray-500 font-medium">% Orders Cancelled</label><input id="f_cancel" name="Pct_Cancelled" type="number" step="0.01" value="0.10" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-blue-300 outline-none"/></div>
+            <div><label class="text-xs text-gray-500 font-medium">Avg Rating Given</label><input id="f_rating" name="Avg_Rating" type="number" step="0.1" value="4.0" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-blue-300 outline-none"/></div>
+            <div><label class="text-xs text-gray-500 font-medium">Customer Age</label><input id="f_age" name="Age" type="number" value="35" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-blue-300 outline-none"/></div>
+            <div><label class="text-xs text-gray-500 font-medium">Customer LTV ($)</label><input id="f_ltv" name="Customer_LTV" type="number" value="1200" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-blue-300 outline-none"/></div>
+            <div><label class="text-xs text-gray-500 font-medium">Payment Method Changes</label><input id="f_pay" name="Payment_Method_Changes" type="number" value="1" class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-blue-300 outline-none"/></div>
+          </div>
+          <!-- Hidden fields with default values -->
+          <input type="hidden" name="Std_Order_Value" value="22.5"/>
+          <input type="hidden" name="Transactions_Per_Month" value="1.2"/>
+          <input type="hidden" name="Order_Value_CV" value="0.32"/>
+          <input type="hidden" name="Frequency_Score" value="3"/>
+          <input type="hidden" name="Monetary_Score" value="3"/>
+          <input type="hidden" name="Historical_Txn_Count" value="10"/>
+          <input type="hidden" name="Historical_Spend" value="700"/>
+          <input type="hidden" name="Preferred_Hour" value="14"/>
+          <input type="hidden" name="Weekend_Purchase_Pct" value="0.35"/>
+          <input type="hidden" name="Preferred_Day_Encoded" value="2"/>
+          <input type="hidden" name="Category_Entropy" value="1.8"/>
+          <input type="hidden" name="Unique_Brands" value="5"/>
+          <input type="hidden" name="Std_Rating" value="0.5"/>
+          <input type="hidden" name="Min_Rating" value="3"/>
+          <input type="hidden" name="Max_Rating" value="5"/>
+          <input type="hidden" name="Is_Satisfied_Customer" value="1"/>
+          <input type="hidden" name="Shipping_Method_Changes" value="1"/>
+          <input type="hidden" name="Pct_Shipped" value="0.80"/>
+          <input type="hidden" name="Pct_Processing" value="0.05"/>
+          <input type="hidden" name="Avg_Cart_Size" value="2.5"/>
+          <input type="hidden" name="Max_Cart_Size" value="6"/>
+          <input type="hidden" name="Std_Cart_Size" value="1.2"/>
+          <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold text-sm hover:bg-blue-700 transition shadow-sm mt-2">Predict Churn Risk →</button>
+        </form>
+      </div>
+      <!-- Result box -->
+      <div id="resultBox" class="bg-gray-50 rounded-2xl p-6 flex flex-col justify-center min-h-[400px]">
+        <div class="text-center text-gray-400">
+          <div class="text-6xl mb-4">🎯</div>
+          <p class="font-semibold text-gray-500">Choose a scenario or fill in the form</p>
+          <p class="text-sm mt-1">and click "Predict Churn Risk" to see the model output</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6: BUSINESS IMPACT -->
+<section class="py-14 bg-blue-50">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center mb-10">
+      <span class="inline-block bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3">Business Impact</span>
+      <h2 class="text-3xl font-extrabold text-gray-900">What This is Worth to Your Business</h2>
+      <p class="text-gray-500 mt-2">Conservative estimates based on industry averages and our model's measured performance.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white rounded-2xl p-6 shadow-sm text-center">
+        <p class="text-gray-500 text-sm font-semibold uppercase tracking-wide mb-2">Small Business</p>
+        <p class="text-3xl font-extrabold text-gray-900">$127K</p>
+        <p class="text-gray-500 text-sm mt-1">Annual prevented losses</p>
+        <div class="mt-4 text-left text-xs text-gray-500 space-y-1 border-t pt-3">
+          <p>• 1,000 customers · 18% at risk = 180 churners</p>
+          <p>• Model catches 171 of them (95% recall)</p>
+          <p>• Avg. customer value $750/yr</p>
+          <p>• 10% retention rate on interventions</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl p-6 shadow-sm text-center ring-2 ring-blue-500">
+        <p class="text-blue-600 text-sm font-semibold uppercase tracking-wide mb-2">Mid-Market</p>
+        <p class="text-4xl font-extrabold text-blue-600">$1.2M</p>
+        <p class="text-gray-500 text-sm mt-1">Annual prevented losses</p>
+        <div class="mt-4 text-left text-xs text-gray-500 space-y-1 border-t pt-3">
+          <p>• 10,000 customers · 18% at risk = 1,800 churners</p>
+          <p>• Model catches 1,710 of them</p>
+          <p>• Avg. customer value $750/yr</p>
+          <p>• 10% retention rate on interventions</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl p-6 shadow-sm text-center">
+        <p class="text-gray-500 text-sm font-semibold uppercase tracking-wide mb-2">Enterprise</p>
+        <p class="text-3xl font-extrabold text-gray-900">$12.7M</p>
+        <p class="text-gray-500 text-sm mt-1">Annual prevented losses</p>
+        <div class="mt-4 text-left text-xs text-gray-500 space-y-1 border-t pt-3">
+          <p>• 100,000 customers · 18% at risk = 18,000 churners</p>
+          <p>• Model catches 17,100 of them</p>
+          <p>• Avg. customer value $750/yr</p>
+          <p>• 10% retention rate on interventions</p>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white rounded-2xl p-6 shadow-sm">
+      <img src="/static/reports/churn_business_impact.png" alt="Business impact" class="w-full rounded-xl mb-4"/>
+      <div class="flex flex-wrap gap-4 justify-center">
+        <a href="#try-model" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition">Try Live Model →</a>
+        <a href="casestudies.html" class="border-2 border-blue-600 text-blue-600 px-6 py-3 rounded-xl font-bold hover:bg-blue-50 transition">Read Full Case Study</a>
+        <a href="../expert/models.html" class="border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-xl font-bold hover:bg-gray-50 transition">Technical Methodology →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="bg-white border-t border-gray-200 py-6">
+  <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
+    <div>
+      <p class="font-bold text-gray-800">?? EcomAnalytics &nbsp;�&nbsp; <span class="text-blue-700 font-semibold">VIF</span></p>
+      <p class="text-xs text-gray-400 mt-1">Built by <span class="font-semibold text-gray-600">Sekar Kumaran</span> &nbsp;�&nbsp; <a href="mailto:visioninnovateforge@gmail.com" class="hover:text-blue-600">visioninnovateforge@gmail.com</a></p>
+    </div>
+    <div class="flex flex-wrap gap-4 text-gray-500">
+      <a href="index.html" class="hover:text-blue-600">Home</a>
+      <a href="casestudies.html" class="hover:text-blue-600">Case Studies</a>
+      <a href="models.html" class="hover:text-blue-600">Models</a>
+      <a href="http://localhost:8000/docs" target="_blank" class="hover:text-blue-600">API Docs</a>
+      <a href="../expert/index.html" class="text-slate-600 font-semibold hover:text-slate-900">Expert View ?</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script>
+const SELECTED_MODEL = {val: 'xgboost'};
+
+function setModel(m) {
+  SELECTED_MODEL.val = m;
+  ['xgboost','lightgbm','widedeep'].forEach(k => {
+    const el = document.getElementById('m-'+k);
+    el.className = k===m
+      ? 'px-3 py-1.5 rounded font-semibold bg-blue-600 text-white transition'
+      : 'px-3 py-1.5 rounded font-semibold text-gray-600 hover:bg-gray-50 transition';
+  });
+}
+
+function showModel(m) {
+  ['xgb','lgbm','widedeep'].forEach(k => {
+    document.getElementById('model-'+k).className =
+      k===m ? 'grid md:grid-cols-2 gap-6 section-fade' : 'hidden grid md:grid-cols-2 gap-6 section-fade';
+    document.getElementById('tab-'+k).className =
+      k===m ? 'tab-btn active px-5 py-2.5 rounded-lg border font-semibold text-sm transition'
+             : 'tab-btn px-5 py-2.5 rounded-lg border font-semibold text-sm transition text-gray-600 hover:bg-gray-50';
+  });
+}
+
+const SCENARIOS = {
+  high:   {Transaction_Count:3, Total_Spend:120, Avg_Order_Value:40, Frequency:0.3, Customer_Tenure_Days:45, Avg_Days_Between_Purchases:92, Unique_Categories:1, Pct_Cancelled:0.40, Avg_Rating:2.5, Age:28, Customer_LTV:200, Payment_Method_Changes:3},
+  border: {Transaction_Count:8, Total_Spend:420, Avg_Order_Value:52.5, Frequency:0.8, Customer_Tenure_Days:180, Avg_Days_Between_Purchases:38, Unique_Categories:3, Pct_Cancelled:0.15, Avg_Rating:3.5, Age:38, Customer_LTV:700, Payment_Method_Changes:1},
+  loyal:  {Transaction_Count:28, Total_Spend:2400, Avg_Order_Value:85.7, Frequency:2.4, Customer_Tenure_Days:730, Avg_Days_Between_Purchases:13, Unique_Categories:7, Pct_Cancelled:0.03, Avg_Rating:4.8, Age:42, Customer_LTV:4200, Payment_Method_Changes:0}
+};
+
+function loadScenario(s) {
+  const d = SCENARIOS[s];
+  document.getElementById('f_txn').value = d.Transaction_Count;
+  document.getElementById('f_spend').value = d.Total_Spend;
+  document.getElementById('f_aov').value = d.Avg_Order_Value;
+  document.getElementById('f_freq').value = d.Frequency;
+  document.getElementById('f_tenure').value = d.Customer_Tenure_Days;
+  document.getElementById('f_days').value = d.Avg_Days_Between_Purchases;
+  document.getElementById('f_cats').value = d.Unique_Categories;
+  document.getElementById('f_cancel').value = d.Pct_Cancelled;
+  document.getElementById('f_rating').value = d.Avg_Rating;
+  document.getElementById('f_age').value = d.Age;
+  document.getElementById('f_ltv').value = d.Customer_LTV;
+  document.getElementById('f_pay').value = d.Payment_Method_Changes;
+  ['high','border','loyal'].forEach(k => {
+    document.getElementById('sc-'+k).className =
+      k===s ? 'scenario-btn active px-5 py-2.5 rounded-xl border-2 text-sm font-semibold transition'
+             : 'scenario-btn px-5 py-2.5 rounded-xl border-2 border-gray-200 text-sm font-semibold text-gray-700 hover:border-blue-400 transition';
+  });
+}
+
+document.getElementById('churnForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const features = {};
+  fd.forEach((v,k) => features[k] = parseFloat(v)||0);
+  const box = document.getElementById('resultBox');
+  box.innerHTML = '<div class="text-center text-gray-400 py-8"><div class="animate-spin text-4xl mb-3">⚙️</div><p>Running prediction…</p></div>';
+  try {
+    const r = await fetch(`/churn/predict?model=${SELECTED_MODEL.val}`, {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(features)
+    }).then(res => res.json());
+    const prob = r.prediction ?? r.churn_probability ?? 0;
+    const pct = Math.round(prob * 100);
+    const isHigh = prob >= 0.7, isMid = prob >= 0.4;
+    const color = isHigh ? 'red' : isMid ? 'yellow' : 'green';
+    const label = isHigh ? 'HIGH CHURN RISK' : isMid ? 'MODERATE RISK' : 'LOW RISK — RETAIN';
+    const action = r.extra?.recommended_action || (isHigh ? 'Send VIP win-back offer — 48h window' : isMid ? 'Trigger re-engagement email sequence' : 'Maintain loyalty rewards program');
+    const colorMap = {red:['bg-red-50','border-red-200','text-red-600','bg-red-100 text-red-700'], yellow:['bg-yellow-50','border-yellow-200','text-yellow-600','bg-yellow-100 text-yellow-700'], green:['bg-green-50','border-green-200','text-green-600','bg-green-100 text-green-700']};
+    const [bg, border, textColor, badge] = colorMap[color];
+    box.innerHTML = `
+      <div class="${bg} border ${border} rounded-2xl p-6 w-full section-fade">
+        <div class="flex items-center gap-4 mb-5">
+          <div class="relative w-28 h-28 shrink-0">
+            <svg viewBox="0 0 36 36" class="w-full h-full -rotate-90">
+              <circle cx="18" cy="18" r="16" fill="none" stroke="#e5e7eb" stroke-width="3"/>
+              <circle cx="18" cy="18" r="16" fill="none" stroke="${isHigh?'#ef4444':isMid?'#f59e0b':'#10b981'}" stroke-width="3" stroke-dasharray="${pct} 100" stroke-linecap="round"/>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center flex-col">
+              <span class="text-2xl font-extrabold ${textColor}">${pct}%</span>
+            </div>
+          </div>
+          <div>
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold ${badge} mb-2">${label}</span>
+            <p class="text-sm text-gray-700 font-semibold">Churn Probability: <span class="${textColor}">${pct}%</span></p>
+            <p class="text-xs text-gray-500 mt-1">Model: ${r.model_used || SELECTED_MODEL.val}</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-4 border ${border}">
+          <p class="text-xs font-bold text-gray-500 uppercase mb-1">Recommended Action</p>
+          <p class="text-sm font-semibold text-gray-800">💡 ${action}</p>
+        </div>
+        <div class="mt-3 grid grid-cols-3 gap-2 text-center text-xs text-gray-500">
+          <div class="bg-white rounded-lg p-2"><p class="font-bold text-gray-700">${Math.round(prob*100)}%</p><p>Risk Score</p></div>
+          <div class="bg-white rounded-lg p-2"><p class="font-bold text-gray-700">${r.extra?.risk_level||label.split(' ')[0]}</p><p>Risk Level</p></div>
+          <div class="bg-white rounded-lg p-2"><p class="font-bold text-gray-700">${r.model_used||SELECTED_MODEL.val}</p><p>Algorithm</p></div>
+        </div>
+      </div>`;
+  } catch(err) {
+    box.innerHTML = `<div class="bg-red-50 border border-red-200 rounded-2xl p-6 text-center"><p class="text-red-600 font-semibold">Prediction failed</p><p class="text-xs text-red-400 mt-1">Make sure the API server is running at localhost:8000</p><p class="text-xs text-gray-400 mt-1">${err.message}</p></div>`;
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{
+    "model_version": "fraud_v2_20260218_213825",
+    "timestamp": "20260218_213825",
+    "dataset": {
+        "source": "transaction_level_enriched.csv",
+        "total_transactions": 301006,
+        "fraud_count": 7255,
+        "fraud_rate": 2.4102509584526555,
+        "train_size": 240804,
+        "test_size": 60202
+    },
+    "features": {
+        "feature_list": [
+            "Amount_vs_Avg_Ratio",
+            "Cart_Size_vs_Avg_Ratio",
+            "Hour",
+            "IsWeekend",
+            "Transaction_Count",
+            "Customer_Tenure_Days",
+            "Pct_Cancelled",
+            "Total_Amount",
+            "Ratings",
+            "Age"
+        ],
+        "num_features": 10,
+        "scaling": "StandardScaler"
+    },
+    "fraud_rules": {
+        "rule_1": "Low_Rating_High_Value == 1",
+        "rule_2": "Is_Problem_Order == 1 AND Is_High_Value_Txn == 1",
+        "rule_3": "Is_Velocity_Spike == 1 AND Is_Unusual_Hour == 1"
+    },
+    "models": {
+        "isolation_forest": {
+            "path": "../artifacts/models/isolation_forest_20260218_213825.pkl",
+            "contamination": 0.024102509584526553,
+            "precision": 0.1912162162162162,
+            "recall": 0.19503790489317713,
+            "f1_score": 0.193108154213579,
+            "pr_auc": 0.1259407713657993
+        },
+        "xgboost": {
+            "path": "../artifacts/models/xgboost_fraud_20260218_213825.pkl",
+            "smote_path": "../artifacts/encoders/smote_20260218_213825.pkl",
+            "smote_strategy": 0.5,
+            "scale_pos_weight": 40.48931771192281,
+            "precision": 0.4917241379310345,
+            "recall": 0.9827705031013094,
+            "f1_score": 0.6554814985060905,
+            "roc_auc": 0.9955069228201239,
+            "pr_auc": 0.9181481867554607
+        },
+        "autoencoder": {
+            "path": "../artifacts/models/autoencoder_fraud_20260218_213825.pkl",
+            "threshold_path": "../artifacts/models/autoencoder_threshold_20260218_213825.pkl",
+            "threshold": 0.0015370759626097774,
+            "encoding_dim": 8,
+            "precision": 0.015251989389920425,
+            "recall": 0.03170227429359063,
+            "f1_score": 0.02059547794940676,
+            "pr_auc": 0.02225124516664046
+        }
+    },
+    "best_models": {
+        "best_recall": "XGBoost + SMOTE",
+        "best_f1": "XGBoost + SMOTE",
+        "best_pr_auc": "XGBoost + SMOTE"
+    },
+    "scaler_path": "../artifacts/scalers/fraud_scaler_20260218_213825.pkl",
+    "random_state": 42
+}

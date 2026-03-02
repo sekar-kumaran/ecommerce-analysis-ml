@@ -1,0 +1,16 @@
+{
+  "model_version": "20260218_185653",
+  "model_type": "Neural Collaborative Filtering",
+  "created_at": "2026-02-18T19:04:31.020504",
+  "n_users": 86740,
+  "n_items": 5,
+  "embedding_size": 64,
+  "n_train_interactions": 146281,
+  "metrics": {
+    "rmse": 2.5842171539266947,
+    "mae": 1.8841962425059593,
+    "rmse_improvement_pct": 23.160094192611943,
+    "mae_improvement_pct": 25.08548165636819
+  },
+  "training_epochs": 6
+}

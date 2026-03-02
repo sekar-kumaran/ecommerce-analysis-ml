@@ -1,0 +1,17 @@
+{
+    "model_name": "ridge_regression",
+    "model_version": "20260218_212141",
+    "training_date": "2026-02-18 21:32:40",
+    "dataset_path": "../data/customer_features_enriched.csv",
+    "n_samples_train": 69392,
+    "n_samples_test": 17348,
+    "n_features": 36,
+    "test_size": 0.2,
+    "random_state": 42,
+    "metrics": {
+        "rmse": 844.2272348702942,
+        "mae": 567.9452272972763,
+        "r2": 0.9309284653581108,
+        "mape": 27.219528883025323
+    }
+}

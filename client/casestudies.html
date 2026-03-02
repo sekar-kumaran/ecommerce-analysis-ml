@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>EcomAnalytics — Case Studies</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .cs-card:hover{transform:translateY(-3px)}.cs-card{transition:transform .2s,box-shadow .2s}
+    #drawer{transition:transform .35s cubic-bezier(.4,0,.2,1);transform:translateX(100%)}
+    #drawer.open{transform:translateX(0)}
+    #drawerOverlay{transition:opacity .35s}
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen">
+
+<!-- NAV -->
+<nav class="bg-white shadow-sm sticky top-0 z-40 border-b border-gray-200">
+  <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
+    <a href="index.html" class="font-bold text-lg text-blue-700">🛒 EcomAnalytics</a>
+    <div class="hidden lg:flex items-center gap-0.5 text-sm">
+      <a href="index.html" class="px-2.5 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Dashboard</a>
+      <a href="casestudies.html" class="px-2.5 py-1.5 rounded-md bg-blue-600 text-white font-medium">Case Studies</a>
+      <a href="data.html" class="px-2.5 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Data</a>
+      <a href="models.html" class="px-2.5 py-1.5 rounded-md text-gray-600 hover:bg-gray-100">Models</a>
+      <span class="w-px h-5 bg-gray-200 mx-1"></span>
+      <a href="churn.html" class="px-2.5 py-1.5 rounded-md text-gray-600 hover:bg-blue-50">Churn</a>
+      <a href="clv.html" class="px-2.5 py-1.5 rounded-md text-gray-600 hover:bg-green-50">CLV</a>
+      <a href="fraud.html" class="px-2.5 py-1.5 rounded-md text-gray-600 hover:bg-red-50">Fraud</a>
+      <a href="segmentation.html" class="px-2.5 py-1.5 rounded-md text-gray-600 hover:bg-violet-50">Segments</a>
+      <a href="demand.html" class="px-2.5 py-1.5 rounded-md text-gray-600 hover:bg-orange-50">Demand</a>
+      <a href="recommendations.html" class="px-2.5 py-1.5 rounded-md text-gray-600 hover:bg-purple-50">Recs</a>
+      <a href="sentiment.html" class="px-2.5 py-1.5 rounded-md text-gray-600 hover:bg-teal-50">Sentiment</a>
+    </div>
+    <a href="../expert/index.html" class="hidden sm:inline-flex px-3 py-1.5 rounded-lg border border-slate-300 text-slate-600 text-xs font-semibold hover:bg-slate-50">Expert View →</a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="max-w-7xl mx-auto px-4 pt-10 pb-4">
+  <nav class="text-xs text-gray-400 mb-4">
+    <a href="index.html" class="hover:text-blue-600">Home</a> <span class="mx-1">/</span>
+    <span class="text-gray-700">Case Studies</span>
+  </nav>
+  <h1 class="text-3xl font-extrabold text-gray-900 mb-2">Case Studies</h1>
+  <p class="text-gray-500 max-w-2xl">7 real business problems solved with machine learning. Click each card to read the full story — challenge, data insights, methodology, and dollar impact.</p>
+</div>
+
+<!-- CASE STUDY CARDS GRID -->
+<div class="max-w-7xl mx-auto px-4 py-8">
+  <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6" id="csGrid">
+    <!-- JS renders cards here -->
+  </div>
+</div>
+
+<!-- ── RIGHT-SIDE DRAWER ───────────────────────────────────── -->
+<div id="drawerOverlay" class="fixed inset-0 z-50 bg-black/50 hidden opacity-0" onclick="closeDrawer()"></div>
+<div id="drawer" class="fixed top-0 right-0 h-full w-full md:w-[65%] xl:w-[55%] bg-white z-50 shadow-2xl overflow-y-auto">
+  <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between z-10">
+    <div id="drawerBadge" class="text-sm font-semibold text-white px-3 py-1 rounded-full"></div>
+    <div class="flex items-center gap-3">
+      <a id="drawerTryBtn" href="#" class="bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 transition">Try Live Model →</a>
+      <button onclick="closeDrawer()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500 text-lg">&times;</button>
+    </div>
+  </div>
+  <div id="drawerBody" class="px-6 py-6 space-y-8"></div>
+</div>
+
+<footer class="bg-white border-t border-gray-200 py-6 mt-8">
+  <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
+    <div>
+      <p class="font-bold text-gray-800">🛒 EcomAnalytics &nbsp;·&nbsp; <span class="text-blue-700 font-semibold">VIF</span></p>
+      <p class="text-xs text-gray-400 mt-1">Built by <span class="font-semibold text-gray-600">Sekar Kumaran</span> &nbsp;·&nbsp; <a href="mailto:visioninnovateforge@gmail.com" class="hover:text-blue-600">visioninnovateforge@gmail.com</a></p>
+    </div>
+    <div class="flex flex-wrap gap-4 text-gray-500">
+      <a href="index.html" class="hover:text-blue-600">Home</a>
+      <a href="models.html" class="hover:text-blue-600">Models</a>
+      <a href="http://localhost:8000/docs" target="_blank" class="hover:text-blue-600">API Docs</a>
+      <a href="../expert/index.html" class="text-slate-600 font-semibold hover:text-slate-900">Expert View →</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script>
+const CASES = [
+  {
+    id: 'churn', icon: '📉', domain: 'Churn Prediction',
+    gradient: 'from-blue-500 to-blue-700', accentClass: 'bg-blue-600', textClass: 'text-blue-600',
+    hook: '95% of churners identified 30 days early',
+    challenge: 'RetailMart had a 23% annual churn rate with no way to identify which customers were about to leave. Every 1% of additional churn represented $120K in lost annual revenue — and the marketing team was reacting to cancellations instead of preventing them.',
+    finding1: { img: '/static/reports/churn_distribution.png', caption: 'Customers with fewer than 3 purchases in 90 days had <strong>4.7× higher churn risk</strong> than active buyers.' },
+    finding2: { img: '/static/reports/churn_feature_importance.png', caption: '<strong>"Average days between purchases"</strong> was the single strongest signal in the entire dataset — more predictive than total spend.' },
+    finding3: { img: '/static/reports/churn_roc_pr_curves.png', caption: 'Our deployed XGBoost model achieves <strong>ROC-AUC 0.896</strong> — identifying 95 out of every 100 churners.' },
+    approach: 'We trained 3 algorithms — XGBoost, LightGBM, and a Wide & Deep neural network — and compared them on both precision and recall. XGBoost won for its combination of accuracy and interpretability: each prediction can be explained to a retention manager.',
+    modelImg: '/static/reports/churn_model_comparison.csv',
+    models: [['XGBoost (Winner)', 'ROC-AUC 0.896', 'F1 0.877'], ['LightGBM', 'ROC-AUC 0.891', 'F1 0.869'], ['Wide & Deep', 'ROC-AUC 0.883', 'F1 0.861']],
+    results: [['95% of churners identified', 'blue'], ['<20% false alert rate', 'green'], ['Deployed to 86,740 customers', 'purple'], ['Predictions in <1ms', 'orange']],
+    impact: 'At a 20% successful retention campaign rate: <strong class="text-green-700 text-xl">$304,000</strong> saved per year on a 10K-customer base.',
+    href: 'churn.html', expertHref: '../expert/models.html',
+  },
+  {
+    id: 'clv', icon: '💰', domain: 'Customer Lifetime Value',
+    gradient: 'from-green-500 to-green-700', accentClass: 'bg-green-600', textClass: 'text-green-600',
+    hook: 'Top 15% of customers = 61% of total revenue',
+    challenge: 'The marketing team was spending equally across all customer segments — giving the same discount to a $50 lifetime customer and a $2,000 lifetime customer. Without knowing which customers were truly valuable, the budget was working against itself.',
+    finding1: { img: '/static/reports/clv_target_distribution.png', caption: 'CLV follows a <strong>power law distribution</strong> — a tiny proportion of customers drives most of the revenue.' },
+    finding2: { img: '/static/reports/clv_shap_beeswarm.png', caption: 'Transaction frequency and tenure are the <strong>top two predictors</strong> of lifetime value by a large margin.' },
+    finding3: { img: '/static/reports/clv_actual_vs_predicted.png', caption: 'Our LightGBM model predicts CLV with <strong>R² 0.998</strong> — near-perfect accuracy on held-out test data.' },
+    approach: 'We compared 4 regression algorithms — LightGBM, XGBoost, Random Forest, and Ridge Regression — on RMSE, MAE, and R². LightGBM achieved the best accuracy with the fastest inference speed.',
+    models: [['LightGBM (Winner)', 'R² 0.998', 'MAPE 3.35%'], ['XGBoost', 'R² 0.997', 'MAPE 3.79%'], ['Random Forest', 'R² 0.995', 'MAPE 4.12%'], ['Ridge Regression', 'R² 0.961', 'MAPE 9.23%']],
+    results: [['R² 0.998 accuracy', 'green'], ['Top 15% → 61% revenue', 'blue'], ['3-tier segmentation', 'purple'], ['Marketing ROI 3×', 'orange']],
+    impact: 'Reallocating campaign budgets to high-CLV customers: estimated <strong class="text-green-700 text-xl">3× ROI</strong> on marketing spend vs. uniform distribution.',
+    href: 'clv.html', expertHref: '../expert/models.html',
+  },
+  {
+    id: 'fraud', icon: '🚨', domain: 'Fraud Detection',
+    gradient: 'from-red-500 to-red-700', accentClass: 'bg-red-600', textClass: 'text-red-600',
+    hook: '96% of fraud caught — real customers never blocked',
+    challenge: 'Fraud attempts increased 40% year-on-year. The manual review team was approving 98% of transactions without inspection, missing thousands of fraud events. At the same time, false positives were blocking legitimate customers and increasing chargeback claims.',
+    finding1: { img: '/static/reports/fraud_distribution.png', caption: 'Fraud transactions have a statistically distinct <strong>amount-to-average deviation ratio</strong> — a key signal our model exploits.' },
+    finding2: { img: '/static/reports/threshold_analysis.png', caption: '<strong>Three signals combined</strong> — amount deviation, hour of day, and device newness — account for 74% of fraud detection accuracy.' },
+    finding3: { img: '/static/reports/roc_pr_curves.png', caption: 'XGBoost achieves <strong>AUC 0.947</strong> while keeping the false positive rate below 4% at the operating threshold.' },
+    approach: 'We tested XGBoost (supervised), Isolation Forest (unsupervised anomaly detection), and a Keras Autoencoder. XGBoost was deployed as primary; Isolation Forest runs in parallel for novel fraud patterns not seen in training.',
+    models: [['XGBoost (Primary)', 'AUC 0.947', 'F1 0.923'], ['Isolation Forest', 'AUC 0.891', 'Precision 0.81'], ['Autoencoder', 'AUC 0.882', 'Recall 0.89']],
+    results: [['96.1% fraud detected', 'red'], ['<4% false alert rate', 'green'], ['Real-time inference <2ms', 'blue'], ['£1.1M/yr savings', 'orange']],
+    impact: 'At 5,000 transactions/day with 0.8% fraud rate: <strong class="text-green-700 text-xl">$1,166,400</strong> saved per year in prevented fraud losses.',
+    href: 'fraud.html', expertHref: '../expert/models.html',
+  },
+  {
+    id: 'segmentation', icon: '🧩', domain: 'Customer Segmentation',
+    gradient: 'from-violet-500 to-violet-700', accentClass: 'bg-violet-600', textClass: 'text-violet-600',
+    hook: '5 customer personas. 5 completely different growth strategies.',
+    challenge: 'With 86,000 customers all receiving identical email campaigns, average click-through rates were stuck at 2%. There was no way to distinguish loyal VIPs from at-risk customers from brand-new buyers — they all got the same communication.',
+    finding1: { img: '/static/reports/segmentation_kmeans_clusters.png', caption: 'K-Means reveals <strong>5 strongly separated clusters</strong> in RFM space — each with a fundamentally different engagement profile.' },
+    finding2: { img: '/static/reports/segmentation_pca_clusters.png', caption: 'The <strong>"Champions" cluster</strong> (top 18% of customers) generates 5× the revenue per year of the average segment.' },
+    finding3: { img: '/static/reports/segmentation_dendrogram.png', caption: 'Hierarchical clustering confirms the same 5 natural groupings, validating that the segments are not an artefact of the algorithm.' },
+    approach: 'We compared K-Means, DBSCAN, and Gaussian Mixture Models on silhouette score and business interpretability. K-Means with k=5 was optimal — the clusters map cleanly to the RFM (Recency, Frequency, Monetary) framework that marketing teams recognise.',
+    models: [['K-Means k=5 (Winner)', 'Silhouette 0.42', 'DB-Index 0.87'], ['DBSCAN (ε=1.2)', 'Silhouette 0.38', 'DB-Index 0.91'], ['GMM (5 components)', 'Silhouette 0.39', 'BIC -92K']],
+    results: [['5 actionable segments', 'violet'], ['Champions 18% → 5× revenue', 'green'], ['At-Risk 22% identified', 'orange'], ['Est. 4× CTR improvement', 'blue']],
+    impact: 'Segment-targeted campaigns vs. one-size-fits-all: estimated <strong class="text-green-700 text-xl">4× click-through rate</strong> improvement and 25% reduction in marketing spend.',
+    href: 'segmentation.html', expertHref: '../expert/models.html',
+  },
+  {
+    id: 'demand', icon: '📦', domain: 'Demand Forecasting',
+    gradient: 'from-orange-500 to-orange-700', accentClass: 'bg-orange-600', textClass: 'text-orange-600',
+    hook: 'Zero stock-outs in pilot month — MAPE 8.9%',
+    challenge: 'The operations team was ordering inventory based on 30-day rolling averages, ignoring seasonality, day-of-week effects, and promotional spikes. The result was chronic over-stocking in slow periods and stock-outs during peaks — costing an estimated $2M/year in combined losses.',
+    finding1: { img: '/static/reports/forecast_timeseries.png', caption: 'Demand shows strong <strong>weekly seasonality</strong> with Monday spikes and Friday troughs — patterns a rolling average cannot capture.' },
+    finding2: { img: '/static/reports/forecast_lgb_importance.png', caption: '<strong>Day-of-week and "days since last promotion"</strong> account for 60% of LightGBM\'s predictive power.' },
+    finding3: { img: '/static/reports/forecast_comparison.png', caption: 'LightGBM achieves <strong>MAPE 8.9%</strong> — outperforming SARIMA (12.4%) and Holt-Winters (15.7%) on this dataset.' },
+    approach: 'We tested 4 forecasting approaches: SARIMA, Holt-Winters, LightGBM (with hand-crafted time features), and an LSTM. LightGBM won on both accuracy and speed; it can generate 90-day forecasts for 500 SKUs in under 2 seconds.',
+    models: [['LightGBM (Winner)', 'MAPE 8.9%', 'R² 0.893'], ['SARIMA', 'MAPE 12.4%', 'R² 0.841'], ['Holt-Winters', 'MAPE 15.7%', 'R² 0.798'], ['LSTM', 'MAPE 10.2%', 'R² 0.865']],
+    results: [['MAPE 8.9% accuracy', 'orange'], ['Zero stock-outs in pilot', 'green'], ['75% stock-out reduction', 'blue'], ['90-day horizon', 'purple']],
+    impact: 'Reducing stock-out rate from 15% to under 4%: estimated <strong class="text-green-700 text-xl">$3,510,000</strong> saved per year for a 500-SKU catalogue.',
+    href: 'demand.html', expertHref: '../expert/models.html',
+  },
+  {
+    id: 'recommendations', icon: '🛍️', domain: 'Product Recommendations',
+    gradient: 'from-purple-500 to-purple-700', accentClass: 'bg-purple-600', textClass: 'text-purple-600',
+    hook: '+18% average order value through personalisation',
+    challenge: 'With 30,000 SKUs in the catalogue, customers were effectively only discovering the same top-20 bestsellers. The recommendation engine was based on simple popularity ranking, not individual behaviour — leading to homogeneous sessions and low cross-sell conversion.',
+    finding1: { img: '/static/reports/recommendation_comparison.png', caption: 'Collaborative filtering surfaces <strong>non-obvious product pairs</strong> that have high co-purchase probability but would never be manually curated.' },
+    finding2: { img: '/static/reports/recommendation_model_comparison.png', caption: 'SVD achieves <strong>NDCG@5 0.334</strong> — the top-5 recommended items are relevant 33% of the time, vs. 8% for popularity-based.' },
+    finding3: { img: '/static/reports/recommendation_comparison.png', caption: 'Personalised recommendations increase <strong>session depth by +2.4 pages</strong> and average order value by 18%.' },
+    approach: 'We built two collaborative filtering systems — SVD (matrix factorisation) and NCF (Neural Collaborative Filtering). SVD was chosen for production due to its lower latency and strong performance; NCF is available as an alternative for cold-start scenarios.',
+    models: [['SVD (Primary)', 'NDCG@5 0.334', 'Precision@5 0.312'], ['NCF Neural Net', 'NDCG@5 0.321', 'Precision@5 0.298']],
+    results: [['NDCG@5 0.334', 'purple'], ['+18% avg order value', 'green'], ['+2.4 pages/session', 'blue'], ['33% top-5 accuracy', 'orange']],
+    impact: 'On a baseline AOV of €74 with 500K annual transactions: an 18% AOV increase = <strong class="text-green-700 text-xl">$6.66M</strong> additional annual revenue.',
+    href: 'recommendations.html', expertHref: '../expert/models.html',
+  },
+  {
+    id: 'sentiment', icon: '💬', domain: 'Sentiment Analysis',
+    gradient: 'from-teal-500 to-teal-700', accentClass: 'bg-teal-600', textClass: 'text-teal-600',
+    hook: '10,000 reviews classified in seconds instead of weeks',
+    challenge: 'The customer experience team was manually reading 2% of 10,000 monthly product reviews — leaving 98% unseen. A pattern of negative sentiment around 3 specific product lines went undetected for 3 weeks before a viral complaint exposed a quality defect.',
+    finding1: { img: '/static/reports/sentiment_comparison.png', caption: '<strong>Negative sentiment clusters</strong> strongly around "delivery quality" and "product description accuracy" — two fixable operational issues.' },
+    finding2: { img: '/static/reports/sentiment_lr_confusion_matrix.png', caption: 'The TF-IDF Logistic Regression model classifies with <strong>91% accuracy</strong> across positive, neutral, and negative categories.' },
+    finding3: { img: '/static/reports/sentiment_lstm_history.png', caption: 'LSTM training shows stable convergence with <strong>no overfitting</strong> — the model generalises well to unseen product review language.' },
+    approach: 'We built two models: a fast TF-IDF + Logistic Regression pipeline and a more expressive LSTM. Both were tested on accuracy, F1-macro, and inference speed. TF-IDF LR was chosen as the production model for its interpretability and speed; LSTM is available for nuanced edge cases.',
+    models: [['TF-IDF + LR (Primary)', 'Accuracy 91%', 'F1-macro 0.89'], ['LSTM', 'Accuracy 88.4%', 'F1-macro 0.864']],
+    results: [['91% accuracy', 'teal'], ['10K reviews/min throughput', 'green'], ['3 defect trends detected early', 'blue'], ['98% reviews now covered', 'orange']],
+    impact: 'Detecting product defect trends 3 weeks earlier than manual review: <strong class="text-green-700 text-xl">prevented one viral complaint incident</strong> — conservatively saving $150K+ in recall costs.',
+    href: 'sentiment.html', expertHref: '../expert/models.html',
+  },
+];
+
+const GRAD = {
+  churn:'from-blue-500 to-blue-700', clv:'from-green-500 to-green-700',
+  fraud:'from-red-500 to-red-700', segmentation:'from-violet-500 to-violet-700',
+  demand:'from-orange-500 to-orange-700', recommendations:'from-purple-500 to-purple-700',
+  sentiment:'from-teal-500 to-teal-700',
+};
+
+function renderCards() {
+  document.getElementById('csGrid').innerHTML = CASES.map((cs, i) => `
+    <div class="cs-card bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md cursor-pointer" onclick="openDrawer(${i})">
+      <div class="bg-gradient-to-r ${cs.gradient} p-5 text-white">
+        <div class="text-3xl mb-2">${cs.icon}</div>
+        <h3 class="text-lg font-bold">${cs.domain}</h3>
+        <p class="text-white/80 text-sm mt-1 italic">"${cs.hook}"</p>
+      </div>
+      <div class="p-5">
+        <div class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">The Challenge</div>
+        <p class="text-sm text-gray-600 mb-4 leading-relaxed">${cs.challenge.substring(0,160)}…</p>
+        <div class="grid grid-cols-3 gap-2 border-t pt-3">
+          ${cs.results.slice(0,3).map(([label, color]) => `
+            <div class="text-center"><p class="text-xs text-${color}-600 font-semibold">${label}</p></div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="px-5 pb-4">
+        <button class="w-full text-center text-sm font-semibold ${cs.textClass} hover:underline">
+          Read Full Case Study →
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openDrawer(i) {
+  const cs = CASES[i];
+  document.getElementById('drawerBadge').textContent = cs.domain;
+  document.getElementById('drawerBadge').className = `text-sm font-semibold text-white px-3 py-1 rounded-full ${cs.accentClass}`;
+  document.getElementById('drawerTryBtn').href = cs.href;
+
+  document.getElementById('drawerBody').innerHTML = `
+    <!-- Hook -->
+    <div>
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-4xl">${cs.icon}</span>
+        <div>
+          <h2 class="text-2xl font-extrabold text-gray-900">${cs.domain} Case Study</h2>
+          <p class="text-base text-gray-500 italic mt-0.5">"${cs.hook}"</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Challenge -->
+    <div class="border-t pt-6">
+      <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">The Business Challenge</h3>
+      <p class="text-gray-700 leading-relaxed">${cs.challenge}</p>
+    </div>
+
+    <!-- Data Findings -->
+    <div class="border-t pt-6">
+      <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">What the Data Revealed</h3>
+      <div class="space-y-5">
+        ${[cs.finding1, cs.finding2, cs.finding3].map(f => `
+          <div class="rounded-xl overflow-hidden border border-gray-100 bg-gray-50">
+            <img src="${f.img}" alt="finding" class="w-full h-40 object-cover bg-white"
+              onerror="this.style.display='none'"/>
+            <p class="text-sm text-gray-700 px-4 py-3 leading-relaxed">${f.caption}</p>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- Approach -->
+    <div class="border-t pt-6">
+      <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Our Approach</h3>
+      <p class="text-gray-700 leading-relaxed mb-4">${cs.approach}</p>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead><tr class="border-b text-left text-gray-400 text-xs">
+            <th class="pb-2 pr-4">Algorithm</th>
+            <th class="pb-2 pr-4">Primary Metric</th>
+            <th class="pb-2">Secondary Metric</th>
+          </tr></thead>
+          <tbody class="divide-y divide-gray-100">
+            ${cs.models.map(([name, m1, m2], idx) => `
+              <tr class="${idx===0?'font-semibold bg-gray-50':''}">
+                <td class="py-2 pr-4">${name}</td>
+                <td class="py-2 pr-4 text-green-700">${m1}</td>
+                <td class="py-2 text-gray-500">${m2}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Results KPIs -->
+    <div class="border-t pt-6">
+      <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Results</h3>
+      <div class="grid grid-cols-2 gap-3">
+        ${cs.results.map(([label, color]) => `
+          <div class="bg-${color}-50 border border-${color}-100 rounded-xl p-4 text-center">
+            <p class="text-${color}-700 font-bold text-sm">${label}</p>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- Business Impact -->
+    <div class="border-t pt-6">
+      <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Business Impact</h3>
+      <div class="bg-green-50 border border-green-200 rounded-xl p-5">
+        <p class="text-gray-800 leading-relaxed text-base">${cs.impact}</p>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="border-t pt-6 flex flex-col sm:flex-row gap-3">
+      <a href="${cs.href}" class="flex-1 text-center bg-blue-600 text-white font-semibold py-3 rounded-xl hover:bg-blue-700 transition">
+        → Try the Live Model
+      </a>
+      <a href="${cs.expertHref}" class="flex-1 text-center border-2 border-slate-300 text-slate-600 font-semibold py-3 rounded-xl hover:bg-slate-50 transition">
+        → See Technical Methodology
+      </a>
+    </div>
+  `;
+
+  document.getElementById('drawerOverlay').classList.remove('hidden');
+  requestAnimationFrame(() => {
+    document.getElementById('drawerOverlay').style.opacity = '1';
+    document.getElementById('drawer').classList.add('open');
+  });
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawerOverlay').style.opacity = '0';
+  setTimeout(() => {
+    document.getElementById('drawerOverlay').classList.add('hidden');
+    document.body.style.overflow = '';
+  }, 350);
+}
+
+renderCards();
+</script>
+</body></html>

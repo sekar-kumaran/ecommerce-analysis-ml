@@ -1,0 +1,27 @@
+{
+  "customer_metrics": {
+    "total_customers": 86740,
+    "avg_customer_ltv": 4746.47734759322,
+    "median_customer_ltv": 4221.48737845,
+    "avg_transactions_per_customer": 3.47020982245792,
+    "avg_days_since_last_purchase": 96.07401429559603
+  },
+  "revenue_metrics": {
+    "total_revenue": 411709445.13023597,
+    "avg_order_value": 1367.7782008672118,
+    "avg_daily_revenue": 1124889.1943449068,
+    "best_performing_day": "Thursday",
+    "best_performing_hour": 7
+  },
+  "product_metrics": {
+    "top_category": "Electronics",
+    "top_category_revenue": 97614358.05,
+    "avg_rating_all_products": 3.1624539045733306,
+    "total_product_categories": 5
+  },
+  "rfm_segments": {
+    "champions_pct": 18.397509799400506,
+    "at_risk_pct": 14.566520636384597,
+    "lost_pct": 11.986396126354624
+  }
+}
