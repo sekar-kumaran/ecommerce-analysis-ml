@@ -4,46 +4,33 @@ services:
   # ─────────────────────────────────────────────
   - type: web
     name: ecommerce-api
-    runtime: docker
-    dockerfilePath: ./Dockerfile.api
-    dockerContext: .
+    runtime: python
+    pythonVersion: "3.11.8"
     plan: starter
+    buildCommand: pip install -r requirements-prod.txt
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
     envVars:
       - key: ENVIRONMENT
         value: production
       - key: MODEL_CACHE_SIZE
         value: "100"
-      - key: PORT
-        value: "8000"
+      - key: PYTHON_VERSION
+        value: "3.11.8"
     autoDeploy: true
 
   # ─────────────────────────────────────────────
-  # Client Dashboard (Business Interface)
+  # Client Dashboard (Business Interface - Static)
   # ─────────────────────────────────────────────
-  - type: web
+  - type: static
     name: ecommerce-client
-    runtime: docker
-    dockerfilePath: ./Dockerfile.client
-    dockerContext: .
-    plan: starter
-    healthCheckPath: /
-    envVars:
-      - key: PORT
-        value: "80"
+    staticPublishPath: ./client
     autoDeploy: true
 
   # ─────────────────────────────────────────────
-  # Expert Portfolio (Data Science Interface)
+  # Expert Portfolio (Data Science Interface - Static)
   # ─────────────────────────────────────────────
-  - type: web
+  - type: static
     name: ecommerce-expert
-    runtime: docker
-    dockerfilePath: ./Dockerfile.expert
-    dockerContext: .
-    plan: starter
-    healthCheckPath: /
-    envVars:
-      - key: PORT
-        value: "80"
+    staticPublishPath: ./expert
     autoDeploy: true

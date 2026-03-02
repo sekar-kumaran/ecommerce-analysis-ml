@@ -1,0 +1,56 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Production requirements — every package verified by reading ALL api/ files
+# Python 3.11 required (tensorflow-cpu does not support 3.12/3.13/3.14)
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Core data ──────────────────────────────────────────────────────────────
+# Used in: churn, clv, fraud, recommendations, segmentation, analytics, demand
+pandas>=1.5.0,<3.0.0
+# Used in: churn, clv, fraud, recommendations, segmentation, demand, sentiment, model_loader
+# numpy 2.x is not stable with tensorflow 2.13–2.16 → pin to 1.x
+numpy>=1.21.0,<2.0.0
+
+# ── ML inference (.pkl models loaded via joblib) ───────────────────────────
+# scikit-learn: KMeans, IsolationForest, GMM, DBSCAN, Ridge, RF, StandardScaler, RobustScaler
+scikit-learn>=1.2.0,<2.0.0
+# lightgbm: clv_lightgbm, churn_lightgbm, forecast_lightgbm (all pkl)
+lightgbm>=3.3.0
+# xgboost: churn_xgboost, clv_xgboost, fraud_xgboost (all pkl)
+xgboost>=1.7.0
+# joblib: used in model_loader.py to load all .pkl files
+joblib>=1.2.0
+# imbalanced-learn: may be embedded inside pkl pipeline objects (safe guard)
+imbalanced-learn>=0.10.0
+
+# ── Deep learning — CPU-only build (loads .keras and .h5 model files) ──────
+# Models: churn_widedeep, rec_ncf, forecast_lstm, fraud_autoencoder, sentiment_lstm
+# tensorflow-cpu is ~3x smaller than full build; Render free tier has no GPU
+# Supports Python 3.11; does NOT support 3.12+ yet
+tensorflow-cpu>=2.13.0,<2.17.0
+# tf-keras: first-choice strategy in model_loader._load_keras_file()
+# Must match tensorflow-cpu major.minor version
+tf-keras>=2.13.0,<2.17.0
+
+# ── Recommendation models ──────────────────────────────────────────────────
+# Surprise SVD: recommendations.py uses model.trainset, model.predict()
+# (rec_svd pkl file is a Surprise SVDAlgo object)
+scikit-surprise>=1.1.0
+
+# ── Web framework ──────────────────────────────────────────────────────────
+fastapi>=0.95.0
+uvicorn[standard]>=0.21.0
+starlette>=0.26.0
+# Required by FastAPI for JSON/form body parsing
+python-multipart>=0.0.6
+# Required by Starlette StaticFiles (mounts /app /expert /static/*)
+aiofiles>=22.1.0
+
+# ── Data validation & serialisation ───────────────────────────────────────
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+
+# ── Config & environment ───────────────────────────────────────────────────
+# python-dotenv: loads .env files (referenced in config.py)
+python-dotenv>=0.21.0
+# python-dateutil: datetime parsing used in churn.py
+python-dateutil>=2.8.0
