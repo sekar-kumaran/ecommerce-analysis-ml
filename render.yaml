@@ -1,0 +1,49 @@
+services:
+  # ─────────────────────────────────────────────
+  # FastAPI Backend (ML inference engine)
+  # ─────────────────────────────────────────────
+  - type: web
+    name: ecommerce-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile.api
+    dockerContext: .
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: MODEL_CACHE_SIZE
+        value: "100"
+      - key: PORT
+        value: "8000"
+    autoDeploy: true
+
+  # ─────────────────────────────────────────────
+  # Client Dashboard (Business Interface)
+  # ─────────────────────────────────────────────
+  - type: web
+    name: ecommerce-client
+    runtime: docker
+    dockerfilePath: ./Dockerfile.client
+    dockerContext: .
+    plan: starter
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: "80"
+    autoDeploy: true
+
+  # ─────────────────────────────────────────────
+  # Expert Portfolio (Data Science Interface)
+  # ─────────────────────────────────────────────
+  - type: web
+    name: ecommerce-expert
+    runtime: docker
+    dockerfilePath: ./Dockerfile.expert
+    dockerContext: .
+    plan: starter
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: "80"
+    autoDeploy: true

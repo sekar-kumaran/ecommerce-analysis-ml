@@ -1,0 +1,86 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+*.egg-info/
+.eggs/
+dist/
+build/
+.installed.cfg
+*.egg
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Large model artifacts (tracked separately or via Git LFS)
+artifacts/models/*.h5
+artifacts/models/*.pkl
+artifacts/models/*.joblib
+artifacts/models/*.pt
+artifacts/models/*.pth
+artifacts/models/*.pb
+artifacts/models/*.keras
+artifacts/encoders/*.pkl
+artifacts/scalers/*.pkl
+
+# Data files (large CSVs - keep only sample/metadata)
+data/*.csv
+data/*.json
+!data/cleaning_metadata.json
+!data/eda_statistics.json
+!data/feature_engineering_log.json
+!data/train_test_metadata_churn.json
+
+# Reports (generated files)
+reports/*.png
+reports/*.pdf
+
+# EDA visualizations
+eda_visualizations/
+
+# SSL certificates
+ssl/
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Compiled files
+*.pyc
+*.pyo
+
+# Coverage
+.coverage
+htmlcov/
+
+# pytest
+.pytest_cache/
