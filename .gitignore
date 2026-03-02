@@ -50,13 +50,7 @@ artifacts/models/*.keras
 artifacts/encoders/*.pkl
 artifacts/scalers/*.pkl
 
-# Data files (large CSVs - keep only sample/metadata)
-data/*.csv
-data/*.json
-!data/cleaning_metadata.json
-!data/eda_statistics.json
-!data/feature_engineering_log.json
-!data/train_test_metadata_churn.json
+# Data files are tracked via Git LFS (see .gitattributes)
 
 # Reports (generated files)
 reports/*.png
