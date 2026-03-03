@@ -1,5 +1,6 @@
-data/*.csv filter=lfs diff=lfs merge=lfs -text
-data/*.json filter=lfs diff=lfs merge=lfs -text
+# Only the small feature_descriptions.csv is kept; it's tiny so no need for LFS
+# JSON metadata files are also small — tracked normally
+# All model artifacts use LFS
 
 # Model artifacts — all tracked via Git LFS
 artifacts/models/*.pkl filter=lfs diff=lfs merge=lfs -text

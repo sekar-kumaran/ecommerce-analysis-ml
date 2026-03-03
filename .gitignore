@@ -42,7 +42,10 @@ logs/
 # Artifacts are tracked via Git LFS (see .gitattributes)
 # Do NOT exclude them — they are needed for Render deployment
 
-# Data files are tracked via Git LFS (see .gitattributes)
+# Data CSV files — only feature_descriptions.csv is used by the backend API
+# All other large CSVs are excluded to stay within GitHub LFS quota
+data/*.csv
+!data/feature_descriptions.csv
 
 # Reports (generated files)
 reports/*.png
